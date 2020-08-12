@@ -348,7 +348,7 @@ function fibonacci(num, memo) {
                     var options = {
                         container: '#treeBox',
                         easing: 'ease-in',
-                        offset: this.treeData.left ? 200 : -200,
+                        offset: this.calculateOffset(),
                         force: true,
                         cancelable: true,
                         // eslint-disable-next-line no-unused-vars
@@ -407,7 +407,7 @@ function fibonacci(num, memo) {
                     var options = {
                         container: '#treeBox',
                         easing: 'ease-in',
-                        offset: this.treeData.left ? 200 * (this.windowWidth / 1200) : -200 * (this.windowWidth / 1200),
+                        offset: this.calculateOffset(),
                         force: true,
                         cancelable: true,
                         // eslint-disable-next-line no-unused-vars
@@ -433,6 +433,14 @@ function fibonacci(num, memo) {
                 if (this.currentIdPath >= this.path.length) {
                     this.complete = true
                 }
+            },
+            calculateOffset() {
+                var offset = 0
+                if (this.windowWidth > 825) {
+                    offset = this.treeData.left ? 200 * (this.windowWidth / 1200) : -200 * (this.windowWidth / 1200)
+                }
+
+                return offset
             },
             async play() {
 
