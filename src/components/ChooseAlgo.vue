@@ -28,8 +28,8 @@
             <label style="color: black;    font-family: Ubuntu,Helvetica,Arial,sans-serif;
     margin-bottom: 20px;
     font-size: 23px; font-weight: 400;">Recursion Visualization</label>
-            <ChoiceLikeAlgoExpert style="margin-top: 20px" v-on:click.native="goToFibo" >Fibonacci</ChoiceLikeAlgoExpert>
-            <ChoiceLikeAlgoExpert v-on:click.native="goToPermut">Permutations</ChoiceLikeAlgoExpert>
+            <ChoiceLikeAlgoExpert difficulty="easy" style="margin-top: 20px" v-on:click.native="goToFibo" >Fibonacci</ChoiceLikeAlgoExpert>
+            <ChoiceLikeAlgoExpert difficulty="medium" v-on:click.native="goToPermut">Permutations</ChoiceLikeAlgoExpert>
         </div>
     </div>
     </div>
