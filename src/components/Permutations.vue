@@ -645,7 +645,7 @@ function permut(string) {
                             '    memo[string] = permutations;\n' +
                             '    return permutations;\n' +
                             '}'
-                        tree.description = `We add our chart '${char}' to each sub permutation : '${char}' + '${subPermutation}'`
+                        tree.description = `We add our char '${char}' to each sub permutation : '${char}' + '${subPermutation}'`
                         tree.val = permutations
                         path.push({
                             'id': tree.id,
