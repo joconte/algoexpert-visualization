@@ -1,11 +1,16 @@
 <template>
     <div class="container">
-        <BoxLikeAlgoExpert style="margin-top: 10px" height="70px" width="90vw" v-bind:center="true">
+        <BoxLikeAlgoExpert style="margin-top: 10px" height="70px" width="99vw" v-bind:center="true">
             <div class="chooseFiboNumber">
                 <md-field md-clearable>
                     <label>Fibonacci number :</label>
                     <md-input v-model="number" type="number" v-on:change="numberChanged = true" />
                 </md-field>
+            </div>
+            <div class="homeBox">
+                <md-button class="md-icon-button" v-on:click="goBackHome()">
+                    <md-icon>home</md-icon>
+                </md-button>
             </div>
             <div class="commandeBox">
                 <div class="commande">
@@ -25,7 +30,7 @@
             </div>
         </BoxLikeAlgoExpert>
         <div class="memoAndVizWide" v-if="windowWidth > 825">
-            <BoxLikeAlgoExpert style="float: left; margin-right: 10px; padding: 10px" height="90vh" width="fit-content" v-bind:scrollable="true">
+            <BoxLikeAlgoExpert style="float: left; margin-right: 10px; padding: 10px" height="90vh" width="130px" v-bind:scrollable="true">
                 <label>Memoization :</label>
                 <pre v-highlightjs="memoAsCode"><code class="javascript"></code></pre>
             </BoxLikeAlgoExpert>
@@ -69,7 +74,7 @@ function fibonacci(num, memo) {
                 </code></pre>
                 </div>
             </BoxLikeAlgoExpert>
-            <BoxLikeAlgoExpert style="padding: 10px" height="16vh" width="90vw" v-bind:center="true" v-bind:scrollable="true">
+            <BoxLikeAlgoExpert style="padding: 10px" height="16vh" width="99vw" v-bind:center="true" v-bind:scrollable="true">
                 <label>Memoization :</label>
                 <pre v-highlightjs="memoAsCode"><code class="javascript"></code></pre>
             </BoxLikeAlgoExpert>
@@ -82,10 +87,11 @@ function fibonacci(num, memo) {
     import TreeChartCustom from "./TreeChartCustom";
     import 'highlight.js/styles/atom-one-dark.css';
     import BoxLikeAlgoExpert from "./BoxLikeAlgoExpert";
+    import {router} from "../router";
 
     export default {
 
-        name: 'HelloWorld',
+        name: 'Fibonacci',
         components: {
             BoxLikeAlgoExpert,
             TreeChartCustom
@@ -95,7 +101,6 @@ function fibonacci(num, memo) {
                 treeData: {},
                 number: 5,
                 path: [],
-                elementsToReinit: [],
                 memo: {},
                 currentIdPath: 0,
                 currentIdCell: 0,
@@ -303,7 +308,7 @@ function fibonacci(num, memo) {
                 var options = {
                     container: '#treeBox',
                     easing: 'ease-in',
-                    offset: this.treeData.left ? 200 : -200,
+                    offset: this.calculateOffset(),
                     force: true,
                     cancelable: true,
                     // eslint-disable-next-line no-unused-vars
@@ -455,11 +460,15 @@ function fibonacci(num, memo) {
                 this.paused = false
                 this.canPlay = false
                 this.canPause = true
+                await new Promise(resolve => {
+                    setTimeout(resolve, 1000)
+                })
+
                 while (this.currentIdPath < this.path.length && !this.paused) {
+                    this.next()
                     await new Promise(resolve => {
                         setTimeout(resolve, 1000)
                     })
-                    this.next()
                 }
                 if (this.currentIdPath >= this.path.length) {
                     this.canPause = false
@@ -471,10 +480,6 @@ function fibonacci(num, memo) {
                 this.canPause = false
                 this.canPlay = true
                 this.paused = true
-            },
-            resume() {
-                this.paused = false
-                this.play()
             },
             updateMemoAsCode() {
                 var memoAsCode = ''
@@ -490,6 +495,9 @@ function fibonacci(num, memo) {
 
                 this.memoAsCode = memoAsCode
             },
+            goBackHome() {
+                router.push("/")
+            }
         }
     }
 </script>
@@ -527,15 +535,15 @@ function fibonacci(num, memo) {
 
     .chooseFiboNumber {
         float: left;
-        width: 50%;
+        width: 35%;
         padding-left: 5px;
         padding-top: 5px;
         height: 70px;
     }
 
     .commandeBox {
-        float: left;
-        width: 50%;
+        float: right;
+        //width: 50%;
         //height: 70px;
         color: white;
     }
@@ -551,14 +559,19 @@ function fibonacci(num, memo) {
     }
 
     .memoAndVizWide {
-        width: 90vw;
+        width: 99vw;
         margin-left: auto;
         margin-right: auto;
     }
 
     .memoAndVizTight {
-        width: 90vw;
+        width: 99vw;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .homeBox {
+        float: right;
+        padding-top: 15px;
     }
 </style>

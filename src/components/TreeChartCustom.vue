@@ -237,6 +237,7 @@
     .node .person .name {
         height: 2em;
         line-height: 2em;
+        width: 70vw;
     }
 
     .node .person .description {
