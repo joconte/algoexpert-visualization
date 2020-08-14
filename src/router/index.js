@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import ChooseAlgo from "../components/ChooseAlgo";
 import Fibonacci from "../components/Fibonacci";
 import Permutations from "../components/Permutations";
+import Powerset from "../components/Powerset";
 
 
 Vue.use(VueRouter)
@@ -31,6 +32,14 @@ const routes = [
         component: Permutations,
         meta: {
             title: 'Permutations - AlgoExpert visualization contest'
+        }
+    },
+    {
+        path: '/Powerset',
+        name: 'Powerset',
+        component: Powerset,
+        meta: {
+            title: 'Powerset - AlgoExpert visualization contest'
         }
     },
 ]

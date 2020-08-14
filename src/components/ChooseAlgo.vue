@@ -39,6 +39,8 @@
                 </ChoiceLikeAlgoExpert>
                 <ChoiceLikeAlgoExpert difficulty="medium" v-on:click.native="goToPermut">Permutations
                 </ChoiceLikeAlgoExpert>
+                <ChoiceLikeAlgoExpert difficulty="medium" v-on:click.native="goToPowerset">Powerset
+                </ChoiceLikeAlgoExpert>
             </div>
         </div>
     </div>
@@ -84,6 +86,9 @@
             },
             goToPermut() {
                 router.push("/Permutations")
+            },
+            goToPowerset() {
+                router.push("/Powerset")
             },
         },
     }

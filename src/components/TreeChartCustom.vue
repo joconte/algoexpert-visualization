@@ -29,7 +29,8 @@
                                     @input="onCmCodeChange"
                             />
                         </div>
-                        <div class="name">{{treeData.name}} = {{treeData.val}}</div>
+                        <div class="name" v-if="treeData.val">{{treeData.name}} = {{treeData.val}}</div>
+                        <div class="name" v-else>{{treeData.name}}</div>
                     </div>
                     <template v-if="Array.isArray(treeData.mate) && treeData.mate.length">
                         <div class="person" v-for="(mate, mateIndex) in treeData.mate" :key="treeData.name+mateIndex"
@@ -159,7 +160,7 @@
                             htmlNode.appendChild(text)
                             htmlNode.className += "presentation";
 
-                            this.widgetAdded = this.codemirror.addLineWidget(this.treeData.currentLine, htmlNode, {above: true})
+                            this.widgetAdded = this.codemirror.addLineWidget(this.treeData.currentLine, htmlNode, {above: true, noHScroll: true})
                         }
                     }
                 }

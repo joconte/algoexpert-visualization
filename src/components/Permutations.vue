@@ -164,11 +164,11 @@
                 this.windowHeight = window.innerHeight
             },
             async play() {
-                if (this.firstTime || this.complete || this.permutInputChanged) {
+                if (this.firstTime || this.complete || this.permutInputChanged || this.currentIdPath === this.path.length - 1) {
                     this.firstTime = false
                     this.canPause = true
                     this.complete = false
-                    this.numberChanged = false
+                    this.permutInputChanged = false
                     await this.initTree();
                 }
 

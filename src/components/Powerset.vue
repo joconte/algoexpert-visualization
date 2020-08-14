@@ -3,8 +3,8 @@
         <BoxLikeAlgoExpert style="margin-top: 10px" height="70px" width="99vw" v-bind:center="true">
             <div class="chooseFiboNumber">
                 <md-field md-clearable>
-                    <label>Fibonacci number :</label>
-                    <md-input v-model="number" type="number" v-on:change="numberChanged = true" />
+                    <label>Powerset :</label>
+                    <md-input v-model="powersetInput" type="text" v-on:change="numberChanged = true"/>
                 </md-field>
             </div>
             <div class="homeBox">
@@ -29,15 +29,7 @@
                 </div>
             </div>
         </BoxLikeAlgoExpert>
-        <div class="memoAndVizWide" v-if="windowWidth > 825">
-            <BoxLikeAlgoExpert style="float: left; margin-right: 10px; padding: 10px" height="90vh" width="150px" v-bind:scrollable="true">
-                <label>Memoization :</label>
-                <codemirror
-                        :value="memoAsCode"
-                        :options="cmOptions"
-                        style="text-align: left;"
-                />
-            </BoxLikeAlgoExpert>
+        <div class="memoAndVizWide">
             <BoxLikeAlgoExpert v-bind:height="'90vh'" v-bind:center="true"
                                v-bind:scrollable="true" id="treeBox">
                 <div v-if="!displayHome">
@@ -52,42 +44,19 @@
                 </div>
             </BoxLikeAlgoExpert>
         </div>
-        <div class="memoAndVizTight" v-else>
-            <BoxLikeAlgoExpert v-bind:height="'70vh'" v-bind:center="true"
-                               v-bind:scrollable="true" id="treeBox">
-                <div v-if="!displayHome">
-                    <TreeChartCustom :json="treeData" :current-id-cell="currentIdCell" id="tree"/>
-                </div>
-                <div v-else class="homeFibo">
-                    <codemirror
-                            :value="content"
-                            :options="cmOptions"
-                            style="text-align: left; width: fit-content;"
-                    />
-                </div>
-            </BoxLikeAlgoExpert>
-            <BoxLikeAlgoExpert style="padding: 10px" height="16vh" width="99vw" v-bind:center="true" v-bind:scrollable="true">
-                <label>Memoization :</label>
-                <codemirror
-                        :value="memoAsCode"
-                        :options="cmOptions"
-                        style="text-align: left;"
-                />
-            </BoxLikeAlgoExpert>
-        </div>
     </div>
 </template>
 
 <script>
 
-    import TreeChartCustom from "./TreeChartCustom";
     import BoxLikeAlgoExpert from "./BoxLikeAlgoExpert";
     import {router} from "../router";
     import '../assets/algoexpert.css'
+    import TreeChartCustom from "./TreeChartCustom";
 
     export default {
 
-        name: 'Fibonacci',
+        name: 'Powerset',
         components: {
             BoxLikeAlgoExpert,
             TreeChartCustom
@@ -95,7 +64,7 @@
         data: function () {
             return {
                 treeData: {},
-                number: 5,
+                powersetInput: '123',
                 path: [],
                 memo: {},
                 currentIdPath: 0,
@@ -114,14 +83,19 @@
                 windowWidth: window.innerWidth,
                 windowHeight: window.innerHeight,
                 numberChanged: false,
-                content: 'function fibonacci(num, memo) {\n' +
-                    '    if (memo[num]) return memo[num];\n' +
+                content: 'function generatePowerset(string) {\n' +
+                    '    const powerset = [];\n' +
+                    '    generatePowersetHelper([], 0);\n' +
                     '\n' +
-                    '    var fibo1 = fibonacci(num - 1, memo);\n' +
-                    '    var fibo2 = fibonacci(num - 2, memo);\n' +
-                    '    memo[num] = fibo1 + fibo2;\n' +
+                    '    function generatePowersetHelper(path, index) {\n' +
+                    '        powerset.push(path);\n' +
+                    '        for (let i = index; i < string.length; i++) {\n' +
+                    '            generatePowersetHelper([...path, string[i]], i + 1);\n' +
+                    '        }\n' +
+                    '        return;\n' +
+                    '    }\n' +
                     '\n' +
-                    '    return memo[num];\n' +
+                    '    return powerset;\n' +
                     '}',
                 cmOptions: {
                     tabSize: 4,
@@ -149,108 +123,6 @@
             window.removeEventListener('resize', this.onResize);
         },
         methods: {
-            fibonacci(num, memo, head, tree, order, path, left) {
-
-                tree.currentLine = 0
-                tree.val = '?';
-                tree.id = order.val
-                tree.code = this.content
-                tree.left = left
-                tree.name = `Fibonacci(${num})`
-                path.push({
-                    'id': tree.id,
-                    'display': true,
-                    'tree': JSON.parse(JSON.stringify(head)),
-                    'memo': JSON.parse(JSON.stringify(memo))
-                })
-
-                order.val += 1
-
-                if (memo[num]) {
-                    tree.name = `Fibonacci(${num})`
-                    tree.description = 'Picked directly from memoization'
-                    tree.val = memo[num];
-                    tree.currentLine = 1
-                    tree.debugMsg = `DEBUG: \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
-                    console.log(tree.debugMsg)
-
-                    path.push({
-                        'id': tree.id,
-                        'tree': JSON.parse(JSON.stringify(head)),
-                        'memo': JSON.parse(JSON.stringify(memo))
-                    })
-                    return memo[num];
-                } else {
-                    tree.currentLine = 1
-                    tree.debugMsg = `DEBUG: \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
-                    path.push({
-                        'id': tree.id,
-                        'tree': JSON.parse(JSON.stringify(head)),
-                        'memo': JSON.parse(JSON.stringify(memo))
-                    })
-                }
-
-                tree.name = `Fibonacci(${num})`
-                tree.description = `Let's compute Fibonacci(${num - 1}) and Fibonacci(${num - 2}) to find Fibonacci(${num})`
-                tree.currentLine = 3
-                tree.debugMsg = `DEBUG: \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
-
-                path.push({
-                    'id': tree.id,
-                    'tree': JSON.parse(JSON.stringify(head)),
-                    'memo': JSON.parse(JSON.stringify(memo))
-                })
-
-                tree.children = [
-                    {
-                        name: `Fibonacci(${num - 1})`,
-                        code: this.content,
-                        val: '?'
-                    },
-                    {
-                        name: `Fibonacci(${num - 2})`,
-                        code: this.content,
-                        val: '?'
-                    }
-                ];
-
-                var fibo1 = this.fibonacci(num - 1, memo, head, tree.children[0], order, path, true);
-
-                tree.currentLine = 4
-                tree.debugMsg = `DEBUG: \n'fibo1': ${fibo1}, \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
-                tree.description = `We explored everything on the left side, we went back here. Now that we have Fibonacci(${num - 1}), let's go to the right side to find Fibonacci(${num - 2})`
-                path.push({
-                    'id': tree.id,
-                    'tree': JSON.parse(JSON.stringify(head)),
-                    'memo': JSON.parse(JSON.stringify(memo))
-                })
-
-                var fibo2 = this.fibonacci(num - 2, memo, head, tree.children[1], order, path, false);
-                memo[num] = fibo1 + fibo2;
-
-                tree.debugMsg = `DEBUG: \n'fibo2': ${fibo2}, \n'fibo1': ${fibo1}, \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
-                tree.currentLine = 5
-                tree.description = `Now we set Fibonacci(${num}) = ${memo[num]} to memoization`
-                tree.val = memo[num];
-
-                path.push({
-                    'id': tree.id,
-                    'tree': JSON.parse(JSON.stringify(head)),
-                    'memo': JSON.parse(JSON.stringify(memo))
-                })
-
-                tree.currentLine = 7
-                tree.debugMsg = `DEBUG: \n'memo[num]': ${memo[num]}, \n'fibo2': ${fibo2}, \n'fibo1': ${fibo1}, \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
-                tree.description = `And we go back`
-
-                path.push({
-                    'id': tree.id,
-                    'tree': JSON.parse(JSON.stringify(head)),
-                    'memo': JSON.parse(JSON.stringify(memo))
-                })
-
-                return memo[num];
-            },
             onResize() {
                 this.windowWidth = window.innerWidth
                 this.windowHeight = window.innerHeight
@@ -260,13 +132,13 @@
                 var tree = {}
                 this.path = [];
                 this.memo = {1: 1, 2: 1};
-                await this.fibonacci(this.number, this.memo, tree, tree, {'val': 0}, this.path);
+                await this.subsets(this.powersetInput, tree);
                 this.currentIdPath = 0;
                 this.treeData = this.path[this.currentIdPath]['tree'];
                 //console.log('this.treeData')
                 //console.log(this.treeData)
-                this.currentMemo = {1: 1, 2: 1};
-                this.updateMemoAsCode()
+                //this.currentMemo = {1: 1, 2: 1};
+                //this.updateMemoAsCode()
                 this.currentIdCell = this.path[this.currentIdPath]['id'];
 
                 await new Promise(resolve => {
@@ -309,8 +181,8 @@
                 if (this.currentIdPath > 0) {
                     this.currentIdPath -= 1
                     this.treeData = this.path[this.currentIdPath]['tree']
-                    this.currentMemo = this.path[this.currentIdPath]['memo']
-                    this.updateMemoAsCode();
+                    //this.currentMemo = this.path[this.currentIdPath]['memo']
+                    //this.updateMemoAsCode();
                     //console.log(this.treeData)
                     this.currentIdCell = this.path[this.currentIdPath]['id'];
 
@@ -368,8 +240,8 @@
                 if (this.currentIdPath < this.path.length - 1) {
                     this.currentIdPath += 1
                     this.treeData = this.path[this.currentIdPath]['tree']
-                    this.currentMemo = this.path[this.currentIdPath]['memo']
-                    this.updateMemoAsCode();
+                    //this.currentMemo = this.path[this.currentIdPath]['memo']
+                    //this.updateMemoAsCode();
                     //console.log(this.treeData)
                     this.currentIdCell = this.path[this.currentIdPath]['id'];
 
@@ -470,6 +342,111 @@
             },
             goBackHome() {
                 router.push("/")
+            },
+            subsets(string, treeHere) {
+                console.log('treeHere')
+                console.log(treeHere)
+                const powerset = [];
+                var pathAlgo = []
+                var content = this.content
+
+                treeHere.currentLine = 0
+                treeHere.val = '?';
+                treeHere.id = 0
+                treeHere.code = this.content
+                treeHere.name = `Powerset(${string})`
+                treeHere.debugMsg = `DEBUG: 'string': '${string}'`
+                pathAlgo.push({
+                    'id': treeHere.id,
+                    'tree': JSON.parse(JSON.stringify(treeHere)),
+                })
+
+                treeHere.currentLine = 1
+                treeHere.debugMsg = `DEBUG: 'string': '${string}'`
+                pathAlgo.push({
+                    'id': treeHere.id,
+                    'tree': JSON.parse(JSON.stringify(treeHere)),
+                })
+
+                treeHere.currentLine = 2
+                treeHere.debugMsg = `DEBUG: 'string': '${string}'`
+                pathAlgo.push({
+                    'id': treeHere.id,
+                    'tree': JSON.parse(JSON.stringify(treeHere)),
+                })
+
+                treeHere.children = [
+                    {
+                        name: `generatePowerset([], 0)`,
+                        code: content,
+                    }]
+
+                generatePowerset([], 0, treeHere, treeHere.children[0], {'val': 1});
+
+                function generatePowerset(path, index, head, tree, order) {
+
+                    console.log('tree')
+                    console.log(tree)
+                    tree.id = order.val
+                    order.val += 1
+                    tree.currentLine = 4
+                    tree.name = `generatePowerset(${JSON.stringify(path)}, ${index})`
+                    tree.debugMsg = `DEBUG: 'string': '${string}', 'index': ${index}, 'path': ${JSON.stringify(path)}, 'powerset': ${JSON.stringify(powerset)}`
+                    pathAlgo.push({
+                        'id': tree.id,
+                        'tree': JSON.parse(JSON.stringify(head)),
+                    })
+                    tree.currentLine = 5
+                    tree.debugMsg = `DEBUG: 'string': '${string}', 'index': ${index}, 'path': ${JSON.stringify(path)}, 'powerset': ${JSON.stringify(powerset)}`
+                    pathAlgo.push({
+                        'id': tree.id,
+                        'tree': JSON.parse(JSON.stringify(head)),
+                    })
+
+                    powerset.push(path);
+
+                    tree.currentLine = 6
+                    tree.debugMsg = `DEBUG: 'string': '${string}', 'index': ${index}, 'path': ${JSON.stringify(path)}, 'powerset': ${JSON.stringify(powerset)}`
+                    pathAlgo.push({
+                        'id': tree.id,
+                        'tree': JSON.parse(JSON.stringify(head)),
+                    })
+                    tree.children = []
+                    for (let i = index; i < string.length; i++) {
+                        tree.currentLine = 7
+                        tree.debugMsg = `DEBUG: 'i' : ${i}, 'string': '${string}', 'index': ${index}, 'path': ${JSON.stringify(path)}, 'powerset': ${JSON.stringify(powerset)}`
+                        tree.children.push(
+                            {
+                                name: `generatePowerset(${JSON.stringify([...path, string[i]])}, ${i + 1})`,
+                                code: content,
+                            })
+                        pathAlgo.push({
+                            'id': tree.id,
+                            'tree': JSON.parse(JSON.stringify(head)),
+                        })
+                        generatePowerset([...path, string[i]], i + 1, head, tree.children[tree.children.length - 1], order);
+                    }
+
+                    tree.currentLine = 9
+                    tree.debugMsg = `DEBUG: 'string': '${string}', 'index': ${index}, 'path': ${JSON.stringify(path)}, 'powerset': ${JSON.stringify(powerset)}`
+                    pathAlgo.push({
+                        'id': tree.id,
+                        'tree': JSON.parse(JSON.stringify(head)),
+                    })
+                    return
+                }
+
+                treeHere.name = `Powerset(${string})`
+                treeHere.val = powerset
+                treeHere.currentLine = 12
+                treeHere.debugMsg = `DEBUG: 'string': '${string}', 'powerset': ${JSON.stringify(powerset)}`
+                pathAlgo.push({
+                    'id': treeHere.id,
+                    'tree': JSON.parse(JSON.stringify(treeHere)),
+                })
+
+                this.path = pathAlgo
+                return powerset;
             }
         }
     }
