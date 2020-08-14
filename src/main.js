@@ -6,6 +6,18 @@ import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import './assets/theme.css'
 import {router} from './router'
+import VueCodemirror from 'vue-codemirror'
+
+// import base style
+import 'codemirror/lib/codemirror.css'
+
+// import more codemirror resource...
+
+// you can set default global options and events when Vue.use
+Vue.use(VueCodemirror, /* {
+  options: { theme: 'base16-dark', ... },
+  events: ['scroll', ...]
+} */)
 
 Vue.use(VueMaterial)
 // Tell Vue.js to use vue-highlightjs

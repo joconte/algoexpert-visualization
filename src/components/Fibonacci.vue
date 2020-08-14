@@ -30,9 +30,13 @@
             </div>
         </BoxLikeAlgoExpert>
         <div class="memoAndVizWide" v-if="windowWidth > 825">
-            <BoxLikeAlgoExpert style="float: left; margin-right: 10px; padding: 10px" height="90vh" width="130px" v-bind:scrollable="true">
+            <BoxLikeAlgoExpert style="float: left; margin-right: 10px; padding: 10px" height="90vh" width="150px" v-bind:scrollable="true">
                 <label>Memoization :</label>
-                <pre v-highlightjs="memoAsCode"><code class="javascript"></code></pre>
+                <codemirror
+                        :value="memoAsCode"
+                        :options="cmOptions"
+                        style="text-align: left;"
+                />
             </BoxLikeAlgoExpert>
             <BoxLikeAlgoExpert v-bind:height="'90vh'" v-bind:center="true"
                                v-bind:scrollable="true" id="treeBox">
@@ -40,17 +44,11 @@
                     <TreeChartCustom :json="treeData" :current-id-cell="currentIdCell" id="tree"/>
                 </div>
                 <div v-else class="homeFibo">
-                <pre v-highlightjs><code class="javascript">
-function fibonacci(num, memo) {
-    if (memo[num]) return memo[num];
-
-    var fibo1 = fibonacci(num - 1, memo);
-    var fibo2 = fibonacci(num - 2, memo);
-    memo[num] = fibo1 + fibo2;
-
-    return memo[num];
-}
-                </code></pre>
+                    <codemirror
+                            :value="content"
+                            :options="cmOptions"
+                            style="text-align: left; width: fit-content;"
+                    />
                 </div>
             </BoxLikeAlgoExpert>
         </div>
@@ -61,22 +59,20 @@ function fibonacci(num, memo) {
                     <TreeChartCustom :json="treeData" :current-id-cell="currentIdCell" id="tree"/>
                 </div>
                 <div v-else class="homeFibo">
-                <pre v-highlightjs><code class="javascript">
-function fibonacci(num, memo) {
-    if (memo[num]) return memo[num];
-
-    var fibo1 = fibonacci(num - 1, memo);
-    var fibo2 = fibonacci(num - 2, memo);
-    memo[num] = fibo1 + fibo2;
-
-    return memo[num];
-}
-                </code></pre>
+                    <codemirror
+                            :value="content"
+                            :options="cmOptions"
+                            style="text-align: left; width: fit-content;"
+                    />
                 </div>
             </BoxLikeAlgoExpert>
             <BoxLikeAlgoExpert style="padding: 10px" height="16vh" width="99vw" v-bind:center="true" v-bind:scrollable="true">
                 <label>Memoization :</label>
-                <pre v-highlightjs="memoAsCode"><code class="javascript"></code></pre>
+                <codemirror
+                        :value="memoAsCode"
+                        :options="cmOptions"
+                        style="text-align: left;"
+                />
             </BoxLikeAlgoExpert>
         </div>
     </div>
@@ -85,9 +81,9 @@ function fibonacci(num, memo) {
 <script>
 
     import TreeChartCustom from "./TreeChartCustom";
-    import 'highlight.js/styles/atom-one-dark.css';
     import BoxLikeAlgoExpert from "./BoxLikeAlgoExpert";
     import {router} from "../router";
+    import '../assets/algoexpert.css'
 
     export default {
 
@@ -117,7 +113,30 @@ function fibonacci(num, memo) {
                 complete: false,
                 windowWidth: window.innerWidth,
                 windowHeight: window.innerHeight,
-                numberChanged: false
+                numberChanged: false,
+                content: 'function fibonacci(num, memo) {\n' +
+                    '    if (memo[num]) return memo[num];\n' +
+                    '\n' +
+                    '    var fibo1 = fibonacci(num - 1, memo);\n' +
+                    '    var fibo2 = fibonacci(num - 2, memo);\n' +
+                    '    memo[num] = fibo1 + fibo2;\n' +
+                    '\n' +
+                    '    return memo[num];\n' +
+                    '}',
+                cmOptions: {
+                    tabSize: 4,
+                    styleActiveLine: false,
+                    lineNumbers: true,
+                    line: true,
+                    foldGutter: true,
+                    styleSelectedText: true,
+                    mode: 'text/javascript',
+                    matchBrackets: true,
+                    showCursorWhenSelecting: true,
+                    theme: "algoexpert",
+                    readOnly: true
+                    // more CodeMirror options...
+                }
             };
         },
         mounted() {
@@ -132,17 +151,10 @@ function fibonacci(num, memo) {
         methods: {
             fibonacci(num, memo, head, tree, order, path, left) {
 
+                tree.currentLine = 0
                 tree.val = '?';
                 tree.id = order.val
-                tree.code = 'function fibonacci(num, memo) {\n' +
-                    '    if (memo[num]) return memo[num];\n' +
-                    '\n' +
-                    '    var fibo1 = fibonacci(num - 1, memo);\n' +
-                    '    var fibo2 = fibonacci(num - 2, memo);\n' +
-                    '    memo[num] = fibo1 + fibo2;\n' +
-                    '\n' +
-                    '    return memo[num];\n' +
-                    '}'
+                tree.code = this.content
                 tree.left = left
 
                 order.val += 1
@@ -151,15 +163,8 @@ function fibonacci(num, memo) {
                     tree.name = `Fibonacci(${num})`
                     tree.description = 'Picked directly from memoization'
                     tree.val = memo[num];
-                    tree.code = 'function fibonacci(num, memo) {\n' +
-                        '    if (memo[num]) return memo[num]; // <-- here\n' +
-                        '\n' +
-                        '    var fibo1 = fibonacci(num - 1, memo);\n' +
-                        '    var fibo2 = fibonacci(num - 2, memo);\n' +
-                        '    memo[num] = fibo1 + fibo2;\n' +
-                        '\n' +
-                        '    return memo[num];\n' +
-                        '}'
+                    tree.currentLine = 1
+
                     path.push({
                         'id': tree.id,
                         'display': true,
@@ -172,44 +177,19 @@ function fibonacci(num, memo) {
                 tree.children = [
                     {
                         name: `Fibonacci(${num - 1})`,
-                        code: 'function fibonacci(num, memo) {\n' +
-                            '    if (memo[num]) return memo[num];\n' +
-                            '\n' +
-                            '    var fibo1 = fibonacci(num - 1, memo);\n' +
-                            '    var fibo2 = fibonacci(num - 2, memo);\n' +
-                            '    memo[num] = fibo1 + fibo2;\n' +
-                            '\n' +
-                            '    return memo[num];\n' +
-                            '}',
+                        code: this.content,
                         val: '?'
                     },
                     {
                         name: `Fibonacci(${num - 2})`,
-                        code: 'function fibonacci(num, memo) {\n' +
-                            '    if (memo[num]) return memo[num];\n' +
-                            '\n' +
-                            '    var fibo1 = fibonacci(num - 1, memo);\n' +
-                            '    var fibo2 = fibonacci(num - 2, memo);\n' +
-                            '    memo[num] = fibo1 + fibo2;\n' +
-                            '\n' +
-                            '    return memo[num];\n' +
-                            '}',
+                        code: this.content,
                         val: '?'
                     }
                 ];
 
                 tree.name = `Fibonacci(${num})`
                 tree.description = `Let's compute Fibonacci(${num - 1}) and Fibonacci(${num - 2}) to find Fibonacci(${num})`
-
-                tree.code = 'function fibonacci(num, memo) {\n' +
-                    '    if (memo[num]) return memo[num];\n' +
-                    '\n' +
-                    '    var fibo1 = fibonacci(num - 1, memo); // <-- here\n' +
-                    '    var fibo2 = fibonacci(num - 2, memo);\n' +
-                    '    memo[num] = fibo1 + fibo2;\n' +
-                    '\n' +
-                    '    return memo[num];\n' +
-                    '}'
+                tree.currentLine = 3
 
                 path.push({
                     'id': tree.id,
@@ -220,15 +200,7 @@ function fibonacci(num, memo) {
 
                 var fibo1 = this.fibonacci(num - 1, memo, head, tree.children[0], order, path, true);
 
-                tree.code = 'function fibonacci(num, memo) {\n' +
-                    '    if (memo[num]) return memo[num];\n' +
-                    '\n' +
-                    '    var fibo1 = fibonacci(num - 1, memo);\n' +
-                    '    var fibo2 = fibonacci(num - 2, memo); // <-- here\n' +
-                    '    memo[num] = fibo1 + fibo2;\n' +
-                    '\n' +
-                    '    return memo[num];\n' +
-                    '}'
+                tree.currentLine = 4
                 tree.description = `We explored everything on the left side, we went back here. Now that we have Fibonacci(${num - 1}), let's go to the right side to find Fibonacci(${num - 2})`
                 path.push({
                     'id': tree.id,
@@ -240,17 +212,9 @@ function fibonacci(num, memo) {
                 var fibo2 = this.fibonacci(num - 2, memo, head, tree.children[1], order, path, false);
                 memo[num] = fibo1 + fibo2;
 
+                tree.currentLine = 5
                 tree.description = `Now we set Fibonacci(${num}) = ${memo[num]} to memoization`
                 tree.val = memo[num];
-                tree.code = 'function fibonacci(num, memo) {\n' +
-                    '    if (memo[num]) return memo[num];\n' +
-                    '\n' +
-                    '    var fibo1 = fibonacci(num - 1, memo);\n' +
-                    '    var fibo2 = fibonacci(num - 2, memo);\n' +
-                    '    memo[num] = fibo1 + fibo2; // <-- here\n' +
-                    '\n' +
-                    '    return memo[num];\n' +
-                    '}'
 
                 path.push({
                     'id': tree.id,
@@ -259,16 +223,8 @@ function fibonacci(num, memo) {
                     'memo': JSON.parse(JSON.stringify(memo))
                 })
 
+                tree.currentLine = 7
                 tree.description = `And we go back`
-                tree.code = 'function fibonacci(num, memo) {\n' +
-                    '    if (memo[num]) return memo[num];\n' +
-                    '\n' +
-                    '    var fibo1 = fibonacci(num - 1, memo);\n' +
-                    '    var fibo2 = fibonacci(num - 2, memo);\n' +
-                    '    memo[num] = fibo1 + fibo2;\n' +
-                    '\n' +
-                    '    return memo[num];// <-- here\n' +
-                    '}'
 
                 path.push({
                     'id': tree.id,
@@ -301,7 +257,7 @@ function fibonacci(num, memo) {
 
                 var element = document.getElementById(this.currentIdCell);
                 //var element = document.getElementsByClassName('active')[0];
-                console.log(element)
+                //console.log(element)
 
                 //var VueScrollTo = require('vue-scrollto');
 
@@ -314,16 +270,16 @@ function fibonacci(num, memo) {
                     // eslint-disable-next-line no-unused-vars
                     onStart: function (element) {
                         // scrolling started
-                        console.log('scrolling start')
+                        //console.log('scrolling start')
                     },
                     // eslint-disable-next-line no-unused-vars
                     onDone: function (element) {
                         // scrolling is done
-                        console.log('scrolling done')
+                        //console.log('scrolling done')
                     },
                     onCancel: function () {
                         // scrolling has been interrupted
-                        console.log('scrolling canceled')
+                        //console.log('scrolling canceled')
                     },
                     x: true,
                     y: true
@@ -337,7 +293,7 @@ function fibonacci(num, memo) {
                     this.treeData = this.path[this.currentIdPath]['tree']
                     this.currentMemo = this.path[this.currentIdPath]['memo']
                     this.updateMemoAsCode();
-                    console.log(this.treeData)
+                    //console.log(this.treeData)
                     this.currentIdCell = this.path[this.currentIdPath]['id'];
 
                     await new Promise(resolve => {
@@ -346,7 +302,7 @@ function fibonacci(num, memo) {
 
                     var element = document.getElementById(this.currentIdCell);
                     //var element = document.getElementsByClassName('active')[0];
-                    console.log(element)
+                    //console.log(element)
 
                     //var VueScrollTo = require('vue-scrollto');
 
@@ -359,16 +315,16 @@ function fibonacci(num, memo) {
                         // eslint-disable-next-line no-unused-vars
                         onStart: function (element) {
                             // scrolling started
-                            console.log('scrolling start')
+                            //console.log('scrolling start')
                         },
                         // eslint-disable-next-line no-unused-vars
                         onDone: function (element) {
                             // scrolling is done
-                            console.log('scrolling done')
+                            //console.log('scrolling done')
                         },
                         onCancel: function () {
                             // scrolling has been interrupted
-                            console.log('scrolling canceled')
+                            //console.log('scrolling canceled')
                         },
                         x: true,
                         y: true
@@ -405,7 +361,7 @@ function fibonacci(num, memo) {
 
                     var element = document.getElementById(this.currentIdCell);
                     //var element = document.getElementsByClassName('active')[0];
-                    console.log(element)
+                    //console.log(element)
 
                     //var VueScrollTo = require('vue-scrollto');
 
@@ -418,16 +374,16 @@ function fibonacci(num, memo) {
                         // eslint-disable-next-line no-unused-vars
                         onStart: function (element) {
                             // scrolling started
-                            console.log('scrolling start')
+                            //console.log('scrolling start')
                         },
                         // eslint-disable-next-line no-unused-vars
                         onDone: function (element) {
                             // scrolling is done
-                            console.log('scrolling done')
+                            //console.log('scrolling done')
                         },
                         onCancel: function () {
                             // scrolling has been interrupted
-                            console.log('scrolling canceled')
+                            //console.log('scrolling canceled')
                         },
                         x: true,
                         y: true
@@ -484,11 +440,11 @@ function fibonacci(num, memo) {
             updateMemoAsCode() {
                 var memoAsCode = ''
                 memoAsCode += 'memo = { \n'
-                console.log(this.currentMemo)
+                //console.log(this.currentMemo)
                 for (var i = 0; i < Object.keys(this.currentMemo).length; i++) {
                     var key = Object.keys(this.currentMemo)[i]
-                    console.log('key: ' + key)
-                    console.log('this.currentMemo[key]: ' + this.currentMemo[key])
+                    //console.log('key: ' + key)
+                    //console.log('this.currentMemo[key]: ' + this.currentMemo[key])
                     memoAsCode += `    ${key} : ${this.currentMemo[key]}, \n`
                 }
                 memoAsCode += '}'
@@ -554,8 +510,8 @@ function fibonacci(num, memo) {
     }
 
     .homeFibo {
-        width: fit-content;
-        margin: auto;
+        //width: fit-content;
+        //margin: auto;
     }
 
     .memoAndVizWide {

@@ -18,7 +18,16 @@
                     >
                         <div class="avat" :class="{active: treeData.id !== undefined && treeData.id === currentIdCell}">
                             <!--label :id="'label-' + treeData.id">{{treeData.val}}</label-->
-                            <pre v-highlightjs="treeData.code"><code class="javascript"></code></pre>
+                            <!--pre v-highlightjs="treeData.code"><code class="javascript"></code></pre-->
+                            <codemirror
+                                    v-bind:ref="'cmEditor-' + treeData.id"
+                                    :value="treeData.code"
+                                    :options="cmOptions"
+                                    style="text-align: left; width: fit-content;"
+                                    @ready="onCmReady"
+                                    @focus="onCmFocus"
+                                    @input="onCmCodeChange"
+                            />
                         </div>
                         <div class="name">{{treeData.name}} = {{treeData.val}}</div>
                     </div>
@@ -49,7 +58,14 @@
 
 <script>
 
-    import 'highlight.js/styles/darcula.css';
+    //import 'highlight.js/styles/darcula.css';
+    // import language js
+    import 'codemirror/mode/javascript/javascript.js'
+
+    // import theme style
+    import '../assets/algoexpert.css'
+    //import 'codemirror/theme/monokai.css'
+    import 'codemirror/addon/selection/active-line.js'
 
     export default {
         name: "TreeChartCustom",
@@ -57,6 +73,20 @@
         data() {
             return {
                 treeData: {},
+                cmOptions: {
+                    tabSize: 4,
+                    styleActiveLine: false,
+                    lineNumbers: true,
+                    line: true,
+                    foldGutter: true,
+                    styleSelectedText: true,
+                    mode: 'text/javascript',
+                    matchBrackets: true,
+                    showCursorWhenSelecting: true,
+                    theme: "algoexpert",
+                    readOnly: true
+                    // more CodeMirror options...
+                }
             }
         },
         watch: {
@@ -82,7 +112,55 @@
             toggleExtend: function (treeData) {
                 treeData.extend = !treeData.extend;
                 this.$forceUpdate();
+            },
+            // eslint-disable-next-line no-unused-vars
+            onCmReady(cm) {
+                //console.log('the editor is readied!', cm)
+            },
+            // eslint-disable-next-line no-unused-vars
+            onCmFocus(cm) {
+                //console.log('the editor is focused!', cm)
+            },
+            // eslint-disable-next-line no-unused-vars
+            onCmCodeChange(newCode) {
+                //console.log('this is new code', newCode)
+                //this.code = newCode
+            },
+            updateLineHighlight() {
+                if (this.treeData.currentLine) {
+                    if (this.codemirror) {
+                        const lineCount = this.codemirror.lineCount()
+                        for (let i = 0; i < lineCount; i++) {
+                            this.codemirror.removeLineClass(i, 'wrap', 'customLine')
+                        }
+                        this.codemirror.addLineClass(this.treeData.currentLine, 'wrap', 'customLine')
+                        var t = this.codemirror.charCoords({line: this.treeData.currentLine, ch: 0}, "local").top;
+                        var middleHeight = this.codemirror.getScrollerElement().offsetHeight / 2;
+                        this.codemirror.scrollTo(null, t - middleHeight - 5);
+                    }
+                }
             }
+        },
+        computed: {
+            codemirror() {
+
+                const ref = this.$refs['cmEditor-' + this.treeData.id]
+                if (ref) {
+                    return ref.codemirror
+                }
+
+                return null;
+            }
+        },
+        async mounted() {
+
+            this.$nextTick(() => {
+                window.setInterval(() => {
+
+                    this.updateLineHighlight()
+                }, 1000);
+            })
+
         }
     }
 </script>
@@ -304,7 +382,7 @@
         margin-left: 0;
     }
 
-    .javascript hljs{
+    .javascript hljs {
         border-width: 2px;
         border-color: white;
         border-style: solid;
@@ -313,5 +391,15 @@
     pre > code {
         //font-size: 10px;
         //line-height: initial;
+    }
+</style>
+
+<style>
+    .customLine {
+        background-color: rgba(235, 64, 52, 0.5);
+    }
+
+    .CodeMirror {
+        height: auto !important;
     }
 </style>

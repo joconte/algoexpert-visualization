@@ -30,9 +30,13 @@
             </div>
         </BoxLikeAlgoExpert>
         <div class="memoAndVizWide" v-if="windowWidth > 825">
-            <BoxLikeAlgoExpert style="float: left; margin-right: 10px; padding: 10px" height="90vh" width="238px" v-bind:scrollable="true">
+            <BoxLikeAlgoExpert style="float: left; margin-right: 10px; padding: 10px" height="90vh" width="270px" v-bind:scrollable="true">
                 <label>Memoization :</label>
-                <pre v-highlightjs="memoAsCode"><code class="javascript"></code></pre>
+                <codemirror
+                        :value="memoAsCode"
+                        :options="cmOptions"
+                        style="text-align: left;"
+                />
             </BoxLikeAlgoExpert>
             <BoxLikeAlgoExpert v-bind:height="'90vh'" v-bind:center="true"
                                v-bind:scrollable="true" id="treeBox">
@@ -40,25 +44,11 @@
                     <TreeChartCustom :json="treeData" :current-id-cell="currentIdCell" id="tree"/>
                 </div>
                 <div v-else class="homePermut">
-                <pre v-highlightjs><code class="javascript">
-function permut(string, memo) {
-    if (string.length &lt; 2) return string;
-
-    var permutations = [];
-    for (var i = 0; i &lt; string.length; i++) {
-        var char = string[i];
-
-        if (string.indexOf(char) !== i)
-            continue;
-
-        var remainingString = string.slice(0, i) + string.slice(i + 1, string.length);
-
-        for (var subPermutation of permut(remainingString, memo))
-            permutations.push(char + subPermutation)
-    }
-    return permutations;
-}
-                </code></pre>
+                    <codemirror
+                            :value="content"
+                            :options="cmOptions"
+                            style="text-align: left; width: fit-content;"
+                    />
                 </div>
             </BoxLikeAlgoExpert>
         </div>
@@ -69,25 +59,11 @@ function permut(string, memo) {
                     <TreeChartCustom :json="treeData" :current-id-cell="currentIdCell" id="tree"/>
                 </div>
                 <div v-else class="homePermut">
-                <pre v-highlightjs><code class="javascript">
-function permut(string, memo) {
-    if (string.length &lt; 2) return string;
-
-    var permutations = [];
-    for (var i = 0; i &lt; string.length; i++) {
-        var char = string[i];
-
-        if (string.indexOf(char) !== i)
-            continue;
-
-        var remainingString = string.slice(0, i) + string.slice(i + 1, string.length);
-
-        for (var subPermutation of permut(remainingString, memo))
-            permutations.push(char + subPermutation)
-    }
-    return permutations;
-}
-                </code></pre>
+                    <codemirror
+                            :value="content"
+                            :options="cmOptions"
+                            style="text-align: left; width: fit-content;"
+                    />
                 </div>
             </BoxLikeAlgoExpert>
             <BoxLikeAlgoExpert style="padding: 10px" height="16vh" width="99vw" v-bind:center="true" v-bind:scrollable="true">
@@ -102,6 +78,7 @@ function permut(string, memo) {
     import BoxLikeAlgoExpert from "./BoxLikeAlgoExpert";
     import TreeChartCustom from "./TreeChartCustom";
     import {router} from "../router";
+    import '../assets/algoexpert.css'
 
     export default {
         name: "Permutations",
@@ -133,7 +110,40 @@ function permut(string, memo) {
                 complete: false,
                 memo: {},
                 currentMemo: {},
-                memoAsCode: ''
+                memoAsCode: '',
+                content: 'function permut(string, memo) {\n' +
+                    '    if (string.length < 2) return string;\n' +
+                    '\n' +
+                    '    if (memo[string]) return memo[string];\n' +
+                    '    var permutations = [];\n' +
+                    '    for (var i = 0; i < string.length; i++) {\n' +
+                    '        var char = string[i];\n' +
+                    '\n' +
+                    '        if (string.indexOf(char) !== i)\n' +
+                    '            continue;\n' +
+                    '\n' +
+                    '        var remainingString = string.slice(0, i) + string.slice(i + 1, string.length);\n' +
+                    '\n' +
+                    '        for (var subPermutation of permut(remainingString, memo))\n' +
+                    '            permutations.push(char + subPermutation)\n' +
+                    '    }\n' +
+                    '    memo[string] = permutations;\n' +
+                    '    return permutations;\n' +
+                    '}',
+                cmOptions: {
+                    tabSize: 4,
+                    styleActiveLine: false,
+                    lineNumbers: true,
+                    line: true,
+                    foldGutter: true,
+                    styleSelectedText: true,
+                    mode: 'text/javascript',
+                    matchBrackets: true,
+                    showCursorWhenSelecting: true,
+                    theme: "algoexpert",
+                    readOnly: true
+                    // more CodeMirror options...
+                }
             }
         },
         mounted() {
@@ -357,25 +367,8 @@ function permut(string, memo) {
                 tree.name = `Permutations(${string})`
                 tree.val = '?';
                 tree.id = order.val
-                tree.code = 'function permut(string, memo) {\n' +
-                    '    if (string.length &lt; 2) return string;\n' +
-                    '\n' +
-                    '    if (memo[string]) return memo[string];\n' +
-                    '    var permutations = [];\n' +
-                    '    for (var i = 0; i < string.length; i++) {\n' +
-                    '        var char = string[i];\n' +
-                    '\n' +
-                    '        if (string.indexOf(char) !== i)\n' +
-                    '            continue;\n' +
-                    '\n' +
-                    '        var remainingString = string.slice(0, i) + string.slice(i + 1, string.length);\n' +
-                    '\n' +
-                    '        for (var subPermutation of permut(remainingString, memo))\n' +
-                    '            permutations.push(char + subPermutation)\n' +
-                    '    }\n' +
-                    '    memo[string] = permutations;\n' +
-                    '    return permutations;\n' +
-                    '}'
+                tree.code = this.content
+                tree.currentLine = 0
 
                 order.val += 1
 
@@ -384,25 +377,7 @@ function permut(string, memo) {
                     tree.name = `Permutations(${string})`
                     tree.description = 'Our input string consists of only 1 character, so there is only one permutation possible : itself'
                     tree.val = string;
-                    tree.code = 'function permut(string, memo) {\n' +
-                        '    if (string.length < 2) return string; // <-- here\n' +
-                        '\n' +
-                        '    if (memo[string]) return memo[string];\n' +
-                        '    var permutations = [];\n' +
-                        '    for (var i = 0; i < string.length; i++) {\n' +
-                        '        var char = string[i];\n' +
-                        '\n' +
-                        '        if (string.indexOf(char) !== i)\n' +
-                        '            continue;\n' +
-                        '\n' +
-                        '        var remainingString = string.slice(0, i) + string.slice(i + 1, string.length);\n' +
-                        '\n' +
-                        '        for (var subPermutation of permut(remainingString, memo))\n' +
-                        '            permutations.push(char + subPermutation)\n' +
-                        '    }\n' +
-                        '    memo[string] = permutations;\n' +
-                        '    return permutations;\n' +
-                        '}'
+                    tree.currentLine = 1
                     path.push({
                         'id': tree.id,
                         'display': true,
@@ -415,25 +390,7 @@ function permut(string, memo) {
                 if (memo[string]) {
                     tree.description = `Picked directly from memoization`
                     tree.val = memo[string]
-                    tree.code = 'function permut(string, memo) {\n' +
-                        '    if (string.length < 2) return string;\n' +
-                        '\n' +
-                        '    if (memo[string]) return memo[string];// <-- here\n' +
-                        '    var permutations = [];\n' +
-                        '    for (var i = 0; i < string.length; i++) {\n' +
-                        '        var char = string[i];\n' +
-                        '\n' +
-                        '        if (string.indexOf(char) !== i)\n' +
-                        '            continue;\n' +
-                        '\n' +
-                        '        var remainingString = string.slice(0, i) + string.slice(i + 1, string.length);\n' +
-                        '\n' +
-                        '        for (var subPermutation of permut(remainingString, memo))\n' +
-                        '            permutations.push(char + subPermutation)\n' +
-                        '    }\n' +
-                        '    memo[string] = permutations;\n' +
-                        '    return permutations;\n' +
-                        '}'
+                    tree.currentLine = 3
                     path.push({
                         'id': tree.id,
                         'display': true,
@@ -454,50 +411,14 @@ function permut(string, memo) {
                     tree.description = `For each character in our input string, we remove it and we compute the permutations of the remaining strings.
                     Here our character is '${char}'`
 
-                    tree.code = 'function permut(string, memo) {\n' +
-                        '    if (string.length < 2) return string;\n' +
-                        '\n' +
-                        '    if (memo[string]) return memo[string]\n' +
-                        '    var permutations = [];\n' +
-                        '    for (var i = 0; i < string.length; i++) {  // <-- here \n' +
-                        '        var char = string[i];\n' +
-                        '\n' +
-                        '        if (string.indexOf(char) !== i)\n' +
-                        '            continue;\n' +
-                        '\n' +
-                        '        var remainingString = string.slice(0, i) + string.slice(i + 1, string.length);\n' +
-                        '\n' +
-                        '        for (var subPermutation of permut(remainingString, memo))\n' +
-                        '            permutations.push(char + subPermutation)\n' +
-                        '    }\n' +
-                        '    memo[string] = permutations;\n' +
-                        '    return permutations;\n' +
-                        '}'
+                    tree.currentLine = 5
                     path.push({
                         'id': tree.id,
                         'display': true,
                         'tree': JSON.parse(JSON.stringify(head)),
                         'memo': JSON.parse(JSON.stringify(memo))
                     })
-                    tree.code = 'function permut(string, memo) {\n' +
-                        '    if (string.length < 2) return string;\n' +
-                        '\n' +
-                        '    if (memo[string]) return memo[string]\n' +
-                        '    var permutations = [];\n' +
-                        '    for (var i = 0; i < string.length; i++) {\n' +
-                        '        var char = string[i]; // <-- here \n' +
-                        '\n' +
-                        '        if (string.indexOf(char) !== i)\n' +
-                        '            continue;\n' +
-                        '\n' +
-                        '        var remainingString = string.slice(0, i) + string.slice(i + 1, string.length);\n' +
-                        '\n' +
-                        '        for (var subPermutation of permut(remainingString, memo))\n' +
-                        '            permutations.push(char + subPermutation)\n' +
-                        '    }\n' +
-                        '    memo[string] = permutations;\n' +
-                        '    return permutations;\n' +
-                        '}'
+                    tree.currentLine = 6
                     path.push({
                         'id': tree.id,
                         'display': true,
@@ -511,25 +432,7 @@ function permut(string, memo) {
 
                     var remainingString = string.slice(0, i) + string.slice(i + 1, string.length); //Note: you can concat Strings via '+' in JS
 
-                    tree.code = 'function permut(string, memo) {\n' +
-                        '    if (string.length < 2) return string;\n' +
-                        '\n' +
-                        '    if (memo[string]) return memo[string]\n' +
-                        '    var permutations = [];\n' +
-                        '    for (var i = 0; i < string.length; i++) {\n' +
-                        '        var char = string[i];\n' +
-                        '\n' +
-                        '        if (string.indexOf(char) !== i)\n' +
-                        '            continue;\n' +
-                        '\n' +
-                        '        var remainingString = string.slice(0, i) + string.slice(i + 1, string.length);// <-- here \n' +
-                        '\n' +
-                        '        for (var subPermutation of permut(remainingString, memo))\n' +
-                        '            permutations.push(char + subPermutation)\n' +
-                        '    }\n' +
-                        '    memo[string] = permutations;\n' +
-                        '    return permutations;\n' +
-                        '}'
+                    tree.currentLine = 11
                     tree.description = `char = '${char}', remainingString = '${remainingString}'`
                     path.push({
                         'id': tree.id,
@@ -538,25 +441,7 @@ function permut(string, memo) {
                         'memo': JSON.parse(JSON.stringify(memo))
                     })
 
-                    tree.code = 'function permut(string, memo) {\n' +
-                        '    if (string.length < 2) return string;\n' +
-                        '\n' +
-                        '    if (memo[string]) return memo[string]\n' +
-                        '    var permutations = [];\n' +
-                        '    for (var i = 0; i < string.length; i++) {\n' +
-                        '        var char = string[i];\n' +
-                        '\n' +
-                        '        if (string.indexOf(char) !== i)\n' +
-                        '            continue;\n' +
-                        '\n' +
-                        '        var remainingString = string.slice(0, i) + string.slice(i + 1, string.length);\n' +
-                        '\n' +
-                        '        for (var subPermutation of permut(remainingString, memo))// <-- here \n' +
-                        '            permutations.push(char + subPermutation)\n' +
-                        '    }\n' +
-                        '    memo[string] = permutations;\n' +
-                        '    return permutations;\n' +
-                        '}'
+                    tree.currentLine = 13
                     tree.description = `We will compute the permutations of 'remainingString': '${remainingString}'`
                     path.push({
                         'id': tree.id,
@@ -568,25 +453,7 @@ function permut(string, memo) {
                     tree.children.push(
                         {
                             name: `Permutations(${remainingString})`,
-                            code: 'function permut(string, memo) {\n' +
-                            '    if (string.length < 2) return string;\n' +
-                            '\n' +
-                            '    if (memo[string]) return memo[string]\n' +
-                            '    var permutations = [];\n' +
-                            '    for (var i = 0; i < string.length; i++) {\n' +
-                            '        var char = string[i];\n' +
-                            '\n' +
-                            '        if (string.indexOf(char) !== i)\n' +
-                            '            continue;\n' +
-                            '\n' +
-                            '        var remainingString = string.slice(0, i) + string.slice(i + 1, string.length);\n' +
-                            '\n' +
-                            '        for (var subPermutation of permut(remainingString, memo))\n' +
-                            '            permutations.push(char + subPermutation)\n' +
-                            '    }\n' +
-                            '    memo[string] = permutations;\n' +
-                            '    return permutations;\n' +
-                            '}',
+                            code: this.content,
                             val: '?'
                         }
                     );
@@ -598,25 +465,7 @@ function permut(string, memo) {
                     })
                     var subPermutations = this.permut(remainingString, memo, head, tree.children[i], order, path);
 
-                    tree.code = 'function permut(string, memo) {\n' +
-                        '    if (string.length < 2) return string;\n' +
-                        '\n' +
-                        '    if (memo[string]) return memo[string]\n' +
-                        '    var permutations = [];\n' +
-                        '    for (var i = 0; i < string.length; i++) {\n' +
-                        '        var char = string[i];\n' +
-                        '\n' +
-                        '        if (string.indexOf(char) !== i)\n' +
-                        '            continue;\n' +
-                        '\n' +
-                        '        var remainingString = string.slice(0, i) + string.slice(i + 1, string.length);\n' +
-                        '\n' +
-                        '        for (var subPermutation of permut(remainingString, memo)) // <-- here \n' +
-                        '            permutations.push(char + subPermutation)\n' +
-                        '    }\n' +
-                        '    memo[string] = permutations;\n' +
-                        '    return permutations;\n' +
-                        '}'
+                    tree.currentLine = 13
                     tree.description = `Got the permutations of 'remainingString'(${remainingString}) : ['${subPermutations}']`
                     path.push({
                         'id': tree.id,
@@ -626,25 +475,7 @@ function permut(string, memo) {
                     })
                     for (var subPermutation of subPermutations) {
                         permutations.push(char + subPermutation)
-                        tree.code = 'function permut(string, memo) {\n' +
-                            '    if (string.length < 2) return string;\n' +
-                            '\n' +
-                            '    if (memo[string]) return memo[string]\n' +
-                            '    var permutations = [];\n' +
-                            '    for (var i = 0; i < string.length; i++) {\n' +
-                            '        var char = string[i];\n' +
-                            '\n' +
-                            '        if (string.indexOf(char) !== i)\n' +
-                            '            continue;\n' +
-                            '\n' +
-                            '        var remainingString = string.slice(0, i) + string.slice(i + 1, string.length);\n' +
-                            '\n' +
-                            '        for (var subPermutation of permut(remainingString, memo))\n' +
-                            '            permutations.push(char + subPermutation) // <-- here \n' +
-                            '    }\n' +
-                            '    memo[string] = permutations;\n' +
-                            '    return permutations;\n' +
-                            '}'
+                        tree.currentLine = 14
                         tree.description = `We add our char '${char}' to each sub permutation : '${char}' + '${subPermutation}'`
                         tree.val = permutations
                         path.push({
@@ -658,25 +489,7 @@ function permut(string, memo) {
 
                 memo[string] = permutations;
 
-                tree.code = 'function permut(string, memo) {\n' +
-                    '    if (string.length < 2) return string;\n' +
-                    '\n' +
-                    '    if (memo[string]) return memo[string]\n' +
-                    '    var permutations = [];\n' +
-                    '    for (var i = 0; i < string.length; i++) {\n' +
-                    '        var char = string[i];\n' +
-                    '\n' +
-                    '        if (string.indexOf(char) !== i)\n' +
-                    '            continue;\n' +
-                    '\n' +
-                    '        var remainingString = string.slice(0, i) + string.slice(i + 1, string.length);\n' +
-                    '\n' +
-                    '        for (var subPermutation of permut(remainingString, memo))\n' +
-                    '            permutations.push(char + subPermutation)\n' +
-                    '    }\n' +
-                    '    memo[string] = permutations; // <-- here \n' +
-                    '    return permutations;\n' +
-                    '}'
+                tree.currentLine = 16
                 tree.description = `We finished computing the permutations for '${string}', we add it to 'memo'.`
                 path.push({
                     'id': tree.id,
@@ -685,25 +498,7 @@ function permut(string, memo) {
                     'memo': JSON.parse(JSON.stringify(memo))
                 })
 
-                tree.code = 'function permut(string, memo) {\n' +
-                    '    if (string.length < 2) return string;\n' +
-                    '\n' +
-                    '    if (memo[string]) return memo[string]\n' +
-                    '    var permutations = [];\n' +
-                    '    for (var i = 0; i < string.length; i++) {\n' +
-                    '        var char = string[i];\n' +
-                    '\n' +
-                    '        if (string.indexOf(char) !== i)\n' +
-                    '            continue;\n' +
-                    '\n' +
-                    '        var remainingString = string.slice(0, i) + string.slice(i + 1, string.length);\n' +
-                    '\n' +
-                    '        for (var subPermutation of permut(remainingString, memo))\n' +
-                    '            permutations.push(char + subPermutation)\n' +
-                    '    }\n' +
-                    '    memo[string] = permutations;\n' +
-                    '    return permutations; // <-- here \n' +
-                    '}'
+                tree.currentLine = 17
                 tree.description = `We finished computing the permutations for '${string}', we return it : ['${permutations.join("', '")}']`
                 path.push({
                     'id': tree.id,
@@ -766,8 +561,9 @@ function permut(string, memo) {
     }
 
     .homePermut {
+        /*
         width: fit-content;
-        margin: auto;
+        margin: auto;*/
     }
 
 </style>
