@@ -84,7 +84,8 @@
                     matchBrackets: true,
                     showCursorWhenSelecting: true,
                     theme: "algoexpert",
-                    readOnly: true
+                    readOnly: true,
+                    widgetAdded: null
                     // more CodeMirror options...
                 }
             }
@@ -106,6 +107,16 @@
                     }
                 },
                 immediate: true
+            },
+            // eslint-disable-next-line no-unused-vars
+            treeData: function (oldVal, val) {
+                /*
+                console.log('treeData changed !')
+                console.log('oldVal:')
+                console.log(oldVal)
+                console.log('val:')
+                console.log(val)*/
+                this.updateLineHighlight()
             }
         },
         methods: {
@@ -127,16 +138,29 @@
                 //this.code = newCode
             },
             updateLineHighlight() {
-                if (this.treeData.currentLine) {
-                    if (this.codemirror) {
-                        const lineCount = this.codemirror.lineCount()
-                        for (let i = 0; i < lineCount; i++) {
-                            this.codemirror.removeLineClass(i, 'wrap', 'customLine')
-                        }
+                if (this.codemirror) {
+                    const lineCount = this.codemirror.lineCount()
+                    if (this.widgetAdded) {
+                        this.widgetAdded.clear()
+                    }
+                    for (let i = 0; i < lineCount; i++) {
+                        this.codemirror.removeLineClass(i, 'wrap', 'customLine')
+                    }
+                    if (this.treeData.currentLine !== undefined) {
                         this.codemirror.addLineClass(this.treeData.currentLine, 'wrap', 'customLine')
                         var t = this.codemirror.charCoords({line: this.treeData.currentLine, ch: 0}, "local").top;
                         var middleHeight = this.codemirror.getScrollerElement().offsetHeight / 2;
                         this.codemirror.scrollTo(null, t - middleHeight - 5);
+
+                        if (this.treeData.debugMsg) {
+                            // create a node
+                            var htmlNode =document.createElement("span");
+                            var text =  document.createTextNode(this.treeData.debugMsg);
+                            htmlNode.appendChild(text)
+                            htmlNode.className += "presentation";
+
+                            this.widgetAdded = this.codemirror.addLineWidget(this.treeData.currentLine, htmlNode, {above: true})
+                        }
                     }
                 }
             }
@@ -153,14 +177,16 @@
             }
         },
         async mounted() {
+            //console.log(`Hello I'm ${this.treeData.id}, ${this.treeData.name}`)
+            //this.updateLineHighlight()
+            /*
+                        this.$nextTick(() => {
+                            window.setInterval(() => {
 
-            this.$nextTick(() => {
-                window.setInterval(() => {
-
-                    this.updateLineHighlight()
-                }, 1000);
-            })
-
+                                this.updateLineHighlight()
+                            }, 1000);
+                        })
+            */
         }
     }
 </script>

@@ -156,6 +156,13 @@
                 tree.id = order.val
                 tree.code = this.content
                 tree.left = left
+                tree.name = `Fibonacci(${num})`
+                path.push({
+                    'id': tree.id,
+                    'display': true,
+                    'tree': JSON.parse(JSON.stringify(head)),
+                    'memo': JSON.parse(JSON.stringify(memo))
+                })
 
                 order.val += 1
 
@@ -164,15 +171,35 @@
                     tree.description = 'Picked directly from memoization'
                     tree.val = memo[num];
                     tree.currentLine = 1
+                    tree.debugMsg = `DEBUG: \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
+                    console.log(tree.debugMsg)
 
                     path.push({
                         'id': tree.id,
-                        'display': true,
                         'tree': JSON.parse(JSON.stringify(head)),
                         'memo': JSON.parse(JSON.stringify(memo))
                     })
                     return memo[num];
+                } else {
+                    tree.currentLine = 1
+                    tree.debugMsg = `DEBUG: \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
+                    path.push({
+                        'id': tree.id,
+                        'tree': JSON.parse(JSON.stringify(head)),
+                        'memo': JSON.parse(JSON.stringify(memo))
+                    })
                 }
+
+                tree.name = `Fibonacci(${num})`
+                tree.description = `Let's compute Fibonacci(${num - 1}) and Fibonacci(${num - 2}) to find Fibonacci(${num})`
+                tree.currentLine = 3
+                tree.debugMsg = `DEBUG: \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
+
+                path.push({
+                    'id': tree.id,
+                    'tree': JSON.parse(JSON.stringify(head)),
+                    'memo': JSON.parse(JSON.stringify(memo))
+                })
 
                 tree.children = [
                     {
@@ -187,24 +214,13 @@
                     }
                 ];
 
-                tree.name = `Fibonacci(${num})`
-                tree.description = `Let's compute Fibonacci(${num - 1}) and Fibonacci(${num - 2}) to find Fibonacci(${num})`
-                tree.currentLine = 3
-
-                path.push({
-                    'id': tree.id,
-                    'display': false,
-                    'tree': JSON.parse(JSON.stringify(head)),
-                    'memo': JSON.parse(JSON.stringify(memo))
-                })
-
                 var fibo1 = this.fibonacci(num - 1, memo, head, tree.children[0], order, path, true);
 
                 tree.currentLine = 4
+                tree.debugMsg = `DEBUG: \n'fibo1': ${fibo1}, \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
                 tree.description = `We explored everything on the left side, we went back here. Now that we have Fibonacci(${num - 1}), let's go to the right side to find Fibonacci(${num - 2})`
                 path.push({
                     'id': tree.id,
-                    'display': false,
                     'tree': JSON.parse(JSON.stringify(head)),
                     'memo': JSON.parse(JSON.stringify(memo))
                 })
@@ -212,23 +228,23 @@
                 var fibo2 = this.fibonacci(num - 2, memo, head, tree.children[1], order, path, false);
                 memo[num] = fibo1 + fibo2;
 
+                tree.debugMsg = `DEBUG: \n'fibo2': ${fibo2}, \n'fibo1': ${fibo1}, \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
                 tree.currentLine = 5
                 tree.description = `Now we set Fibonacci(${num}) = ${memo[num]} to memoization`
                 tree.val = memo[num];
 
                 path.push({
                     'id': tree.id,
-                    'display': true,
                     'tree': JSON.parse(JSON.stringify(head)),
                     'memo': JSON.parse(JSON.stringify(memo))
                 })
 
                 tree.currentLine = 7
+                tree.debugMsg = `DEBUG: \n'memo[num]': ${memo[num]}, \n'fibo2': ${fibo2}, \n'fibo1': ${fibo1}, \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
                 tree.description = `And we go back`
 
                 path.push({
                     'id': tree.id,
-                    'display': true,
                     'tree': JSON.parse(JSON.stringify(head)),
                     'memo': JSON.parse(JSON.stringify(memo))
                 })
@@ -241,12 +257,14 @@
             },
             async initTree() {
                 this.displayHome = false
-                this.treeData = {};
+                var tree = {}
                 this.path = [];
                 this.memo = {1: 1, 2: 1};
-                await this.fibonacci(this.number, this.memo, this.treeData, this.treeData, {'val': 0}, this.path);
+                await this.fibonacci(this.number, this.memo, tree, tree, {'val': 0}, this.path);
                 this.currentIdPath = 0;
                 this.treeData = this.path[this.currentIdPath]['tree'];
+                //console.log('this.treeData')
+                //console.log(this.treeData)
                 this.currentMemo = {1: 1, 2: 1};
                 this.updateMemoAsCode()
                 this.currentIdCell = this.path[this.currentIdPath]['id'];
