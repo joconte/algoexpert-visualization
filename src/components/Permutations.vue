@@ -68,7 +68,11 @@
             </BoxLikeAlgoExpert>
             <BoxLikeAlgoExpert style="padding: 10px" height="16vh" width="99vw" v-bind:center="true" v-bind:scrollable="true">
                 <label>Memoization :</label>
-                <pre v-highlightjs="memoAsCode"><code class="javascript"></code></pre>
+                <codemirror
+                        :value="memoAsCode"
+                        :options="cmOptions"
+                        style="text-align: left;"
+                />
             </BoxLikeAlgoExpert>
         </div>
     </div>
