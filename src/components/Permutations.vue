@@ -179,16 +179,15 @@
                     setTimeout(resolve, 1000)
                 })
 
-                while (this.currentIdPath < this.path.length && !this.paused) {
+                while (this.currentIdPath < this.path.length - 1 && !this.paused) {
                     this.next()
                     await new Promise(resolve => {
                         setTimeout(resolve, 1000)
                     })
                 }
-                if (this.currentIdPath >= this.path.length) {
+                if (!this.paused) {
                     this.canPause = false
                     this.canPlay = true
-                    this.complete = true
                 }
             },
             async initTree() {
@@ -305,7 +304,7 @@
                     return;
                 }
 
-                if (this.currentIdPath < this.path.length) {
+                if (this.currentIdPath < this.path.length - 1) {
                     this.currentIdPath += 1
                     this.treeData = this.path[this.currentIdPath]['tree']
                     this.currentMemo = this.path[this.currentIdPath]['memo']
@@ -348,9 +347,9 @@
                     }
 
                     this.$scrollTo(element, 300, options)
-                }
-                if (this.currentIdPath >= this.path.length) {
+                } else {
                     this.complete = true
+                    this.displayHome = true
                 }
             },
             updateMemoAsCode() {
