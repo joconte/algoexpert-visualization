@@ -1,5 +1,6 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <table v-if="treeData.name">
+    <table v-if="treeData.name" style="margin-left: auto;
+    margin-right: auto;">
         <tr>
             <td :colspan="Array.isArray(treeData.children) ? treeData.children.length * 2 : 1"
                 :class="{parentLevel: Array.isArray(treeData.children) && treeData.children.length, extend: Array.isArray(treeData.children) && treeData.children.length && treeData.extend}"
@@ -16,21 +17,26 @@
                          :class="Array.isArray(treeData.class) ? treeData.class : []"
                          @click="$emit('click-node', treeData)"
                     >
-                        <div class="avat" :class="{active: treeData.id !== undefined && treeData.id === currentIdCell}">
-                            <!--label :id="'label-' + treeData.id">{{treeData.val}}</label-->
-                            <!--pre v-highlightjs="treeData.code"><code class="javascript"></code></pre-->
-                            <codemirror
-                                    v-bind:ref="'cmEditor-' + treeData.id"
-                                    :value="treeData.code"
-                                    :options="cmOptions"
-                                    style="text-align: left; width: fit-content;"
-                                    @ready="onCmReady"
-                                    @focus="onCmFocus"
-                                    @input="onCmCodeChange"
-                            />
+                        <div class="wrapper">
+                            <div class="avat"
+                                 :class="{active: treeData.id !== undefined && treeData.id === currentIdCell}">
+                                <!--label :id="'label-' + treeData.id">{{treeData.val}}</label-->
+                                <!--pre v-highlightjs="treeData.code"><code class="javascript"></code></pre-->
+                                <codemirror
+                                        v-bind:ref="'cmEditor-' + treeData.id"
+                                        :value="treeData.code"
+                                        :options="cmOptions"
+                                        style="text-align: left; width: fit-content;"
+                                        @ready="onCmReady"
+                                        @focus="onCmFocus"
+                                        @input="onCmCodeChange"
+                                />
+                            </div>
+                            <div class="child">
+                                <div class="name" v-if="treeData.val">{{treeData.name}} = {{treeData.val}}</div>
+                                <div class="name" v-else>{{treeData.name}}</div>
+                            </div>
                         </div>
-                        <div class="name" v-if="treeData.val">{{treeData.name}} = {{treeData.val}}</div>
-                        <div class="name" v-else>{{treeData.name}}</div>
                     </div>
                     <template v-if="Array.isArray(treeData.mate) && treeData.mate.length">
                         <div class="person" v-for="(mate, mateIndex) in treeData.mate" :key="treeData.name+mateIndex"
@@ -155,12 +161,15 @@
 
                         if (this.treeData.debugMsg) {
                             // create a node
-                            var htmlNode =document.createElement("span");
-                            var text =  document.createTextNode(this.treeData.debugMsg);
+                            var htmlNode = document.createElement("span");
+                            var text = document.createTextNode(this.treeData.debugMsg);
                             htmlNode.appendChild(text)
                             htmlNode.className += "presentation";
 
-                            this.widgetAdded = this.codemirror.addLineWidget(this.treeData.currentLine, htmlNode, {above: true, noHScroll: true})
+                            this.widgetAdded = this.codemirror.addLineWidget(this.treeData.currentLine, htmlNode, {
+                                above: true,
+                                noHScroll: true
+                            })
                         }
                     }
                 }
@@ -340,9 +349,9 @@
     }
 
     .node .person .name {
-        height: 2em;
+        //height: 2em;
         line-height: 2em;
-        width: 70vw;
+        //width: 70vw;
     }
 
     .node .person .description {
@@ -418,6 +427,19 @@
     pre > code {
         //font-size: 10px;
         //line-height: initial;
+    }
+
+    .child {
+        display: flex;
+    }
+
+    .child div {
+        flex-grow: 1;
+        width: 0;
+    }
+
+    .wrapper {
+        display: inline-block;
     }
 </style>
 
