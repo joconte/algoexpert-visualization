@@ -7,6 +7,13 @@ The goal is to help visualize recursive algorithms by drawing the recursive tree
 
 ![alt text](https://raw.githubusercontent.com/joconte/algoexpert-visualization/master/public/run.png)
 
+It currently have 3 algorithms : Fibonacci, Permutations, Powerset.
+It's actually quiet easy to add other recursive algorithm but not yet fully generic.
+
+I used Vue-Tree-Chart (https://github.com/tower1229/Vue-Tree-Chart) for the tree structure but I tweaked it a bit for my needs.
+I used CodeMirror to display the code.
+Finally I tried to give the website an AlgoExpert look.
+
 ## Project setup
 ```
 npm install
