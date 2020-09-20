@@ -344,8 +344,6 @@
                 router.push("/")
             },
             subsets(string, treeHere) {
-                console.log('treeHere')
-                console.log(treeHere)
                 const powerset = [];
                 var pathAlgo = []
                 var content = this.content
@@ -385,8 +383,6 @@
 
                 function generatePowerset(path, index, head, tree, order) {
 
-                    console.log('tree')
-                    console.log(tree)
                     tree.id = order.val
                     order.val += 1
                     tree.currentLine = 4

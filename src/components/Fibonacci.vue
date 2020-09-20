@@ -172,7 +172,6 @@
                     tree.val = memo[num];
                     tree.currentLine = 1
                     tree.debugMsg = `DEBUG: \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
-                    console.log(tree.debugMsg)
 
                     path.push({
                         'id': tree.id,
