@@ -1,11 +1,17 @@
 # AlgoExpert SWE Project Contests Summer-Fall 2020 - Recursive Algorithms Visualization
 
 The goal is to help visualize recursive algorithms by drawing the recursive calls as a tree and showing variable values like in a debugger.
+
 It currently have 3 algorithms : Fibonacci, Permutations, Powerset.
+
 It's currently quite easy to add other recursive algorithm but it's not yet fully generic.
 
 I used Vue-Tree-Chart (https://github.com/tower1229/Vue-Tree-Chart) for the tree structure but I tweaked it a bit for my needs.
+
 I used CodeMirror (https://codemirror.net) to display the code.
+
+I also used Vue.js.
+
 Finally I tried to give the website an AlgoExpert look.
 
 ![alt text](https://raw.githubusercontent.com/joconte/algoexpert-visualization/master/public/home.png)
