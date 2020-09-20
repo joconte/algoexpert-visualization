@@ -50,7 +50,6 @@
     import ChoiceLikeAlgoExpert from "./ChoiceLikeAlgoExpert";
     import {router} from "../router";
 
-
     export default {
         name: "ChooseAlgo",
         data: function () {
@@ -106,9 +105,4 @@
         border-radius: 10px;
     }
 
-    .myMarker {
-        position: absolute;
-        background: rgba(100, 200, 100, 0.5);
-        z-index: 20
-    }
 </style>

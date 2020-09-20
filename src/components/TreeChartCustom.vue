@@ -20,8 +20,6 @@
                         <div class="wrapper">
                             <div class="avat"
                                  :class="{active: treeData.id !== undefined && treeData.id === currentIdCell}">
-                                <!--label :id="'label-' + treeData.id">{{treeData.val}}</label-->
-                                <!--pre v-highlightjs="treeData.code"><code class="javascript"></code></pre-->
                                 <codemirror
                                         v-bind:ref="'cmEditor-' + treeData.id"
                                         :value="treeData.code"
@@ -65,13 +63,8 @@
 
 <script>
 
-    //import 'highlight.js/styles/darcula.css';
-    // import language js
     import 'codemirror/mode/javascript/javascript.js'
-
-    // import theme style
     import '../assets/algoexpert.css'
-    //import 'codemirror/theme/monokai.css'
     import 'codemirror/addon/selection/active-line.js'
 
     export default {
@@ -117,12 +110,6 @@
             },
             // eslint-disable-next-line no-unused-vars
             treeData: function (oldVal, val) {
-                /*
-                console.log('treeData changed !')
-                console.log('oldVal:')
-                console.log(oldVal)
-                console.log('val:')
-                console.log(val)*/
                 this.updateLineHighlight()
             }
         },
@@ -185,18 +172,6 @@
 
                 return null;
             }
-        },
-        async mounted() {
-            //console.log(`Hello I'm ${this.treeData.id}, ${this.treeData.name}`)
-            //this.updateLineHighlight()
-            /*
-                        this.$nextTick(() => {
-                            window.setInterval(() => {
-
-                                this.updateLineHighlight()
-                            }, 1000);
-                        })
-            */
         }
     }
 </script>
@@ -313,20 +288,12 @@
         text-align: center;
     }
 
-    //.node .person{position: relative; display: inline-block;z-index: 2;width:6em; overflow: hidden;}
     .node .person .avat {
         display: flex;
         width: max-content;
         height: max-content;
         margin: auto;
         overflow: hidden;
-        /*
-        background: #fff;
-        border-style: solid;
-        border-color: #ccc;
-        border-width: 2px;
-
-         */
         box-sizing: border-box;
         text-align: initial;
         padding-left: 5px;
@@ -349,9 +316,7 @@
     }
 
     .node .person .name {
-        //height: 2em;
         line-height: 2em;
-        //width: 70vw;
     }
 
     .node .person .description {
@@ -422,11 +387,6 @@
         border-width: 2px;
         border-color: white;
         border-style: solid;
-    }
-
-    pre > code {
-        //font-size: 10px;
-        //line-height: initial;
     }
 
     .child {

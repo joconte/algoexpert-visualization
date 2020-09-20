@@ -135,10 +135,6 @@
                 await this.subsets(this.powersetInput, tree);
                 this.currentIdPath = 0;
                 this.treeData = this.path[this.currentIdPath]['tree'];
-                //console.log('this.treeData')
-                //console.log(this.treeData)
-                //this.currentMemo = {1: 1, 2: 1};
-                //this.updateMemoAsCode()
                 this.currentIdCell = this.path[this.currentIdPath]['id'];
 
                 await new Promise(resolve => {
@@ -146,10 +142,6 @@
                 })
 
                 var element = document.getElementById(this.currentIdCell);
-                //var element = document.getElementsByClassName('active')[0];
-                //console.log(element)
-
-                //var VueScrollTo = require('vue-scrollto');
 
                 var options = {
                     container: '#treeBox',
@@ -157,20 +149,6 @@
                     offset: this.calculateOffset(),
                     force: true,
                     cancelable: true,
-                    // eslint-disable-next-line no-unused-vars
-                    onStart: function (element) {
-                        // scrolling started
-                        //console.log('scrolling start')
-                    },
-                    // eslint-disable-next-line no-unused-vars
-                    onDone: function (element) {
-                        // scrolling is done
-                        //console.log('scrolling done')
-                    },
-                    onCancel: function () {
-                        // scrolling has been interrupted
-                        //console.log('scrolling canceled')
-                    },
                     x: true,
                     y: true
                 }
@@ -181,9 +159,7 @@
                 if (this.currentIdPath > 0) {
                     this.currentIdPath -= 1
                     this.treeData = this.path[this.currentIdPath]['tree']
-                    //this.currentMemo = this.path[this.currentIdPath]['memo']
-                    //this.updateMemoAsCode();
-                    //console.log(this.treeData)
+
                     this.currentIdCell = this.path[this.currentIdPath]['id'];
 
                     await new Promise(resolve => {
@@ -191,10 +167,6 @@
                     })
 
                     var element = document.getElementById(this.currentIdCell);
-                    //var element = document.getElementsByClassName('active')[0];
-                    //console.log(element)
-
-                    //var VueScrollTo = require('vue-scrollto');
 
                     var options = {
                         container: '#treeBox',
@@ -202,20 +174,6 @@
                         offset: this.calculateOffset(),
                         force: true,
                         cancelable: true,
-                        // eslint-disable-next-line no-unused-vars
-                        onStart: function (element) {
-                            // scrolling started
-                            //console.log('scrolling start')
-                        },
-                        // eslint-disable-next-line no-unused-vars
-                        onDone: function (element) {
-                            // scrolling is done
-                            //console.log('scrolling done')
-                        },
-                        onCancel: function () {
-                            // scrolling has been interrupted
-                            //console.log('scrolling canceled')
-                        },
                         x: true,
                         y: true
                     }
@@ -240,9 +198,6 @@
                 if (this.currentIdPath < this.path.length - 1) {
                     this.currentIdPath += 1
                     this.treeData = this.path[this.currentIdPath]['tree']
-                    //this.currentMemo = this.path[this.currentIdPath]['memo']
-                    //this.updateMemoAsCode();
-                    //console.log(this.treeData)
                     this.currentIdCell = this.path[this.currentIdPath]['id'];
 
                     await new Promise(resolve => {
@@ -250,10 +205,6 @@
                     })
 
                     var element = document.getElementById(this.currentIdCell);
-                    //var element = document.getElementsByClassName('active')[0];
-                    //console.log(element)
-
-                    //var VueScrollTo = require('vue-scrollto');
 
                     var options = {
                         container: '#treeBox',
@@ -261,20 +212,6 @@
                         offset: this.calculateOffset(),
                         force: true,
                         cancelable: true,
-                        // eslint-disable-next-line no-unused-vars
-                        onStart: function (element) {
-                            // scrolling started
-                            //console.log('scrolling start')
-                        },
-                        // eslint-disable-next-line no-unused-vars
-                        onDone: function (element) {
-                            // scrolling is done
-                            //console.log('scrolling done')
-                        },
-                        onCancel: function () {
-                            // scrolling has been interrupted
-                            //console.log('scrolling canceled')
-                        },
                         x: true,
                         y: true
                     }
@@ -325,20 +262,6 @@
                 this.canPause = false
                 this.canPlay = true
                 this.paused = true
-            },
-            updateMemoAsCode() {
-                var memoAsCode = ''
-                memoAsCode += 'memo = { \n'
-                //console.log(this.currentMemo)
-                for (var i = 0; i < Object.keys(this.currentMemo).length; i++) {
-                    var key = Object.keys(this.currentMemo)[i]
-                    //console.log('key: ' + key)
-                    //console.log('this.currentMemo[key]: ' + this.currentMemo[key])
-                    memoAsCode += `    ${key} : ${this.currentMemo[key]}, \n`
-                }
-                memoAsCode += '}'
-
-                this.memoAsCode = memoAsCode
             },
             goBackHome() {
                 router.push("/")

@@ -40,7 +40,6 @@
     .boxLikeAlgoExpert {
         border-radius: 4px;
         background-color: #001628;
-        //margin-top: 10px;
         margin-bottom: 10px;
         font-weight: 600;
         font-size: 14px;

@@ -151,37 +151,37 @@
         methods: {
             fibonacci(num, memo, head, tree, order, path, left) {
 
-                tree.currentLine = 0
+                tree.currentLine = 0;
                 tree.val = '?';
-                tree.id = order.val
-                tree.code = this.content
-                tree.left = left
-                tree.name = `Fibonacci(${num})`
+                tree.id = order.val;
+                tree.code = this.content;
+                tree.left = left;
+                tree.name = `Fibonacci(${num})`;
                 path.push({
                     'id': tree.id,
                     'display': true,
                     'tree': JSON.parse(JSON.stringify(head)),
                     'memo': JSON.parse(JSON.stringify(memo))
-                })
+                });
 
-                order.val += 1
+                order.val += 1;
 
                 if (memo[num]) {
-                    tree.name = `Fibonacci(${num})`
-                    tree.description = 'Picked directly from memoization'
+                    tree.name = `Fibonacci(${num})`;
+                    tree.description = 'Picked directly from memoization';
                     tree.val = memo[num];
-                    tree.currentLine = 1
-                    tree.debugMsg = `DEBUG: \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
+                    tree.currentLine = 1;
+                    tree.debugMsg = `DEBUG: \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`;
 
                     path.push({
                         'id': tree.id,
                         'tree': JSON.parse(JSON.stringify(head)),
                         'memo': JSON.parse(JSON.stringify(memo))
-                    })
+                    });
                     return memo[num];
                 } else {
-                    tree.currentLine = 1
-                    tree.debugMsg = `DEBUG: \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
+                    tree.currentLine = 1;
+                    tree.debugMsg = `DEBUG: \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`;
                     path.push({
                         'id': tree.id,
                         'tree': JSON.parse(JSON.stringify(head)),
@@ -189,16 +189,16 @@
                     })
                 }
 
-                tree.name = `Fibonacci(${num})`
-                tree.description = `Let's compute Fibonacci(${num - 1}) and Fibonacci(${num - 2}) to find Fibonacci(${num})`
-                tree.currentLine = 3
-                tree.debugMsg = `DEBUG: \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
+                tree.name = `Fibonacci(${num})`;
+                tree.description = `Let's compute Fibonacci(${num - 1}) and Fibonacci(${num - 2}) to find Fibonacci(${num})`;
+                tree.currentLine = 3;
+                tree.debugMsg = `DEBUG: \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`;
 
                 path.push({
                     'id': tree.id,
                     'tree': JSON.parse(JSON.stringify(head)),
                     'memo': JSON.parse(JSON.stringify(memo))
-                })
+                });
 
                 tree.children = [
                     {
@@ -213,57 +213,55 @@
                     }
                 ];
 
-                var fibo1 = this.fibonacci(num - 1, memo, head, tree.children[0], order, path, true);
+                let fibo1 = this.fibonacci(num - 1, memo, head, tree.children[0], order, path, true);
 
-                tree.currentLine = 4
-                tree.debugMsg = `DEBUG: \n'fibo1': ${fibo1}, \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
-                tree.description = `We explored everything on the left side, we went back here. Now that we have Fibonacci(${num - 1}), let's go to the right side to find Fibonacci(${num - 2})`
+                tree.currentLine = 4;
+                tree.debugMsg = `DEBUG: \n'fibo1': ${fibo1}, \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`;
+                tree.description = `We explored everything on the left side, we went back here. Now that we have Fibonacci(${num - 1}), let's go to the right side to find Fibonacci(${num - 2})`;
                 path.push({
                     'id': tree.id,
                     'tree': JSON.parse(JSON.stringify(head)),
                     'memo': JSON.parse(JSON.stringify(memo))
-                })
+                });
 
-                var fibo2 = this.fibonacci(num - 2, memo, head, tree.children[1], order, path, false);
+                let fibo2 = this.fibonacci(num - 2, memo, head, tree.children[1], order, path, false);
                 memo[num] = fibo1 + fibo2;
 
-                tree.debugMsg = `DEBUG: \n'fibo2': ${fibo2}, \n'fibo1': ${fibo1}, \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
-                tree.currentLine = 5
-                tree.description = `Now we set Fibonacci(${num}) = ${memo[num]} to memoization`
+                tree.debugMsg = `DEBUG: \n'fibo2': ${fibo2}, \n'fibo1': ${fibo1}, \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`;
+                tree.currentLine = 5;
+                tree.description = `Now we set Fibonacci(${num}) = ${memo[num]} to memoization`;
                 tree.val = memo[num];
 
                 path.push({
                     'id': tree.id,
                     'tree': JSON.parse(JSON.stringify(head)),
                     'memo': JSON.parse(JSON.stringify(memo))
-                })
+                });
 
-                tree.currentLine = 7
-                tree.debugMsg = `DEBUG: \n'memo[num]': ${memo[num]}, \n'fibo2': ${fibo2}, \n'fibo1': ${fibo1}, \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`
-                tree.description = `And we go back`
+                tree.currentLine = 7;
+                tree.debugMsg = `DEBUG: \n'memo[num]': ${memo[num]}, \n'fibo2': ${fibo2}, \n'fibo1': ${fibo1}, \n'num': ${num}, \n'memo': ${JSON.stringify(memo)}`;
+                tree.description = `And we go back`;
 
                 path.push({
                     'id': tree.id,
                     'tree': JSON.parse(JSON.stringify(head)),
                     'memo': JSON.parse(JSON.stringify(memo))
-                })
+                });
 
                 return memo[num];
             },
             onResize() {
-                this.windowWidth = window.innerWidth
+                this.windowWidth = window.innerWidth;
                 this.windowHeight = window.innerHeight
             },
             async initTree() {
-                this.displayHome = false
-                var tree = {}
+                this.displayHome = false;
+                let tree = {};
                 this.path = [];
                 this.memo = {1: 1, 2: 1};
                 await this.fibonacci(this.number, this.memo, tree, tree, {'val': 0}, this.path);
                 this.currentIdPath = 0;
                 this.treeData = this.path[this.currentIdPath]['tree'];
-                //console.log('this.treeData')
-                //console.log(this.treeData)
                 this.currentMemo = {1: 1, 2: 1};
                 this.updateMemoAsCode()
                 this.currentIdCell = this.path[this.currentIdPath]['id'];
@@ -273,10 +271,6 @@
                 })
 
                 var element = document.getElementById(this.currentIdCell);
-                //var element = document.getElementsByClassName('active')[0];
-                //console.log(element)
-
-                //var VueScrollTo = require('vue-scrollto');
 
                 var options = {
                     container: '#treeBox',
@@ -284,20 +278,6 @@
                     offset: this.calculateOffset(),
                     force: true,
                     cancelable: true,
-                    // eslint-disable-next-line no-unused-vars
-                    onStart: function (element) {
-                        // scrolling started
-                        //console.log('scrolling start')
-                    },
-                    // eslint-disable-next-line no-unused-vars
-                    onDone: function (element) {
-                        // scrolling is done
-                        //console.log('scrolling done')
-                    },
-                    onCancel: function () {
-                        // scrolling has been interrupted
-                        //console.log('scrolling canceled')
-                    },
                     x: true,
                     y: true
                 }
@@ -310,7 +290,6 @@
                     this.treeData = this.path[this.currentIdPath]['tree']
                     this.currentMemo = this.path[this.currentIdPath]['memo']
                     this.updateMemoAsCode();
-                    //console.log(this.treeData)
                     this.currentIdCell = this.path[this.currentIdPath]['id'];
 
                     await new Promise(resolve => {
@@ -318,10 +297,6 @@
                     })
 
                     var element = document.getElementById(this.currentIdCell);
-                    //var element = document.getElementsByClassName('active')[0];
-                    //console.log(element)
-
-                    //var VueScrollTo = require('vue-scrollto');
 
                     var options = {
                         container: '#treeBox',
@@ -329,20 +304,6 @@
                         offset: this.calculateOffset(),
                         force: true,
                         cancelable: true,
-                        // eslint-disable-next-line no-unused-vars
-                        onStart: function (element) {
-                            // scrolling started
-                            //console.log('scrolling start')
-                        },
-                        // eslint-disable-next-line no-unused-vars
-                        onDone: function (element) {
-                            // scrolling is done
-                            //console.log('scrolling done')
-                        },
-                        onCancel: function () {
-                            // scrolling has been interrupted
-                            //console.log('scrolling canceled')
-                        },
                         x: true,
                         y: true
                     }
@@ -369,7 +330,6 @@
                     this.treeData = this.path[this.currentIdPath]['tree']
                     this.currentMemo = this.path[this.currentIdPath]['memo']
                     this.updateMemoAsCode();
-                    //console.log(this.treeData)
                     this.currentIdCell = this.path[this.currentIdPath]['id'];
 
                     await new Promise(resolve => {
@@ -377,10 +337,6 @@
                     })
 
                     var element = document.getElementById(this.currentIdCell);
-                    //var element = document.getElementsByClassName('active')[0];
-                    //console.log(element)
-
-                    //var VueScrollTo = require('vue-scrollto');
 
                     var options = {
                         container: '#treeBox',
@@ -388,20 +344,6 @@
                         offset: this.calculateOffset(),
                         force: true,
                         cancelable: true,
-                        // eslint-disable-next-line no-unused-vars
-                        onStart: function (element) {
-                            // scrolling started
-                            //console.log('scrolling start')
-                        },
-                        // eslint-disable-next-line no-unused-vars
-                        onDone: function (element) {
-                            // scrolling is done
-                            //console.log('scrolling done')
-                        },
-                        onCancel: function () {
-                            // scrolling has been interrupted
-                            //console.log('scrolling canceled')
-                        },
                         x: true,
                         y: true
                     }
@@ -413,7 +355,7 @@
                 }
             },
             calculateOffset() {
-                var offset = 0
+                let offset = 0;
                 if (this.windowWidth > 825) {
                     offset = this.treeData.left ? 200 * (this.windowWidth / 1200) : -200 * (this.windowWidth / 1200)
                 }
@@ -456,11 +398,8 @@
             updateMemoAsCode() {
                 var memoAsCode = ''
                 memoAsCode += 'memo = { \n'
-                //console.log(this.currentMemo)
                 for (var i = 0; i < Object.keys(this.currentMemo).length; i++) {
                     var key = Object.keys(this.currentMemo)[i]
-                    //console.log('key: ' + key)
-                    //console.log('this.currentMemo[key]: ' + this.currentMemo[key])
                     memoAsCode += `    ${key} : ${this.currentMemo[key]}, \n`
                 }
                 memoAsCode += '}'
@@ -474,7 +413,6 @@
     }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 
     .customNode {
@@ -486,7 +424,6 @@
         width: 800px;
         margin: auto;
         overflow: scroll;
-        //overflow-x:hidden;
         border-radius: 4px;
         background-color: #001628;
     }
@@ -515,19 +452,12 @@
 
     .commandeBox {
         float: right;
-        //width: 50%;
-        //height: 70px;
         color: white;
     }
 
     .commande {
         text-align: center;
         padding-top: 15px;
-    }
-
-    .homeFibo {
-        //width: fit-content;
-        //margin: auto;
     }
 
     .memoAndVizWide {

@@ -197,47 +197,22 @@
                 this.memo = {}
                 await this.permut(this.permutInput, this.memo, tree, tree, {'val': 0}, this.path);
 
-                /*
-                for (var permutation of permutations)
-                    console.log(permutation)
-*/
                 this.currentIdPath = 0;
                 this.treeData = this.path[this.currentIdPath]['tree'];
-                //console.log(this.treeData)
                 this.memoAsCode = {}
                 this.updateMemoAsCode()
                 this.currentIdCell = this.path[this.currentIdPath]['id'];
-                //console.log(this.currentIdCell)
                 await new Promise(resolve => {
                     setTimeout(resolve, 100)
                 })
 
                 var element = document.getElementById(this.currentIdCell);
-                //var element = document.getElementsByClassName('active')[0];
-                //console.log(element)
-
-                //var VueScrollTo = require('vue-scrollto');
 
                 var options = {
                     container: '#treeBox',
                     easing: 'ease-in',
-                    //offset: this.calculateOffset(),
                     force: true,
                     cancelable: true,
-                    // eslint-disable-next-line no-unused-vars
-                    onStart: function (element) {
-                        // scrolling started
-                        //console.log('scrolling start')
-                    },
-                    // eslint-disable-next-line no-unused-vars
-                    onDone: function (element) {
-                        // scrolling is done
-                        //console.log('scrolling done')
-                    },
-                    onCancel: function () {
-                        // scrolling has been interrupted
-                        //console.log('scrolling canceled')
-                    },
                     x: true,
                     y: true
                 }
@@ -248,7 +223,6 @@
                 if (this.currentIdPath > 0) {
                     this.currentIdPath -= 1
                     this.treeData = this.path[this.currentIdPath]['tree']
-                    //console.log(this.treeData)
                     this.currentMemo = this.path[this.currentIdPath]['memo']
                     this.updateMemoAsCode();
                     this.currentIdCell = this.path[this.currentIdPath]['id'];
@@ -258,31 +232,12 @@
                     })
 
                     var element = document.getElementById(this.currentIdCell);
-                    //var element = document.getElementsByClassName('active')[0];
-                    //console.log(element)
-
-                    //var VueScrollTo = require('vue-scrollto');
 
                     var options = {
                         container: '#treeBox',
                         easing: 'ease-in',
-                        //offset: this.calculateOffset(),
                         force: true,
                         cancelable: true,
-                        // eslint-disable-next-line no-unused-vars
-                        onStart: function (element) {
-                            // scrolling started
-                            //console.log('scrolling start')
-                        },
-                        // eslint-disable-next-line no-unused-vars
-                        onDone: function (element) {
-                            // scrolling is done
-                            //console.log('scrolling done')
-                        },
-                        onCancel: function () {
-                            // scrolling has been interrupted
-                            //console.log('scrolling canceled')
-                        },
                         x: true,
                         y: true
                     }
@@ -309,7 +264,6 @@
                     this.treeData = this.path[this.currentIdPath]['tree']
                     this.currentMemo = this.path[this.currentIdPath]['memo']
                     this.updateMemoAsCode();
-                    //console.log(this.treeData)
                     this.currentIdCell = this.path[this.currentIdPath]['id'];
 
                     await new Promise(resolve => {
@@ -317,31 +271,12 @@
                     })
 
                     var element = document.getElementById(this.currentIdCell);
-                    //var element = document.getElementsByClassName('active')[0];
-                    //console.log(element)
-
-                    //var VueScrollTo = require('vue-scrollto');
 
                     var options = {
                         container: '#treeBox',
                         easing: 'ease-in',
-                        //offset: this.calculateOffset(),
                         force: true,
                         cancelable: true,
-                        // eslint-disable-next-line no-unused-vars
-                        onStart: function (element) {
-                            // scrolling started
-                            //console.log('scrolling start')
-                        },
-                        // eslint-disable-next-line no-unused-vars
-                        onDone: function (element) {
-                            // scrolling is done
-                            //console.log('scrolling done')
-                        },
-                        onCancel: function () {
-                            // scrolling has been interrupted
-                            //console.log('scrolling canceled')
-                        },
                         x: true,
                         y: true
                     }
@@ -355,11 +290,8 @@
             updateMemoAsCode() {
                 var memoAsCode = ''
                 memoAsCode += 'memo = { \n'
-                //console.log(this.currentMemo)
                 for (var i = 0; i < Object.keys(this.currentMemo).length; i++) {
                     var key = Object.keys(this.currentMemo)[i]
-                    //console.log('key: ' + key)
-                    //console.log('this.currentMemo[key]: ' + this.currentMemo[key])
                     memoAsCode += `    '${key}' : ['${this.currentMemo[key].join("', '")}'], \n`
                 }
                 memoAsCode += '}'
@@ -584,8 +516,6 @@
 
     .commandeBox {
         float: right;
-        //width: 50%;
-        //height: 70px;
         color: white;
     }
 
@@ -604,12 +534,6 @@
         width: 99vw;
         margin-left: auto;
         margin-right: auto;
-    }
-
-    .homePermut {
-        /*
-        width: fit-content;
-        margin: auto;*/
     }
 
 </style>
